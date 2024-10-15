@@ -30,6 +30,13 @@ set(Jaka_DLLS_RELEASE "")
 set(Jaka_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/JakaRobotDll/include")
 file(GLOB Jaka_LIB_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/JakaRobotDll/Release/*.lib")
 #file(GLOB Jaka_DLL_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/JakaRobotDll/Release/*.dll")
+###############################################################################################
+set(Flexiv_INCLUDE "")
+set(Flexiv_LIB_RELEASE "")
+set(Flexiv_DLLS_RELEASE "")
+
+set(Flexiv_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/flexiv_sdk/include")
+file(GLOB Flexiv_LIB_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/flexiv_sdk/Release/*.lib")
 
 ############################################################################33
 mitk_create_module(
@@ -38,6 +45,7 @@ mitk_create_module(
      PUBLIC ${Diana_INCLUDE}
      PUBLIC ${Hans_INCLUDE}
      PUBLIC ${Jaka_INCLUDE}
+     PUBLIC ${Flexiv_INCLUDE}  # 添加 Flexiv 的头文件路径
   DEPENDS PUBLIC MitkCore 
   DEPENDS MitkLancetPrintDataHelper
   PACKAGE_DEPENDS VTK
@@ -46,7 +54,9 @@ mitk_create_module(
   ADDITIONAL_LIBS PUBLIC "${Diana_LIB_RELEASE}"
   ADDITIONAL_LIBS PUBLIC "${Hans_LIB_RELEASE}"
   ADDITIONAL_LIBS PUBLIC "${Jaka_LIB_RELEASE}"
+  ADDITIONAL_LIBS PUBLIC "${Flexiv_LIB_RELEASE}"  # 添加 Flexiv 的库文件路径
 )
+
 
 # 添加 Hans 的 DLL
 #foreach(DLL_FILE ${Hans_DLL_RELEASE})
