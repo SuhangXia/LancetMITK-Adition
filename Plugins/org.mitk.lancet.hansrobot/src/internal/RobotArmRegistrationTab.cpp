@@ -11,7 +11,7 @@
 RobotArmRegistrationTab::RobotArmRegistrationTab(Ui::HansRobotControls ui, mitk::DataStorage* aDataStorage, AbstractRobot* aRobot, AbstractCamera* aCamera, QWidget* parent)
 {
 	m_ui = ui;
-	m_Robot = dynamic_cast<LancetHansRobot*>(aRobot);
+	m_Robot = dynamic_cast<LancetJakaRobot*>(aRobot);
 	m_Camera = aCamera;
 	m_dataStorage = aDataStorage;
 	if (!m_dataStorage)

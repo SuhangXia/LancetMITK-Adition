@@ -19,7 +19,7 @@ found in the LICENSE file.
 #include <QmitkAbstractView.h>
 #include "AimCamera.h"
 #include "ui_HansRobotControls.h"
-#include <LancetHansRobot.h>
+#include <LancetJakaRobot.h>
 #include "ConnectionTab.h"
 #include "RobotArmRegistrationTab.h"
 
@@ -56,7 +56,7 @@ protected:
   void DoImageProcessing();
 
   Ui::HansRobotControls m_Controls;
-  LancetHansRobot* m_Robot;
+  LancetJakaRobot* m_Robot;
   AimCamera* m_Camera;
   ConnectionTab* m_ConnectionTab;
   RobotArmRegistrationTab* m_RobotArmRegistrationTab;

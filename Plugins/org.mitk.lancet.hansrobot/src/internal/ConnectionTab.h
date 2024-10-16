@@ -16,7 +16,7 @@
 #include <mitkNodePredicateDataType.h>
 #include <mitkNodePredicateOr.h>
 #include <mitkColorProperty.h>
-
+#include <LancetJakaRobot.h>
 class ConnectionTab : public QWidget
 {
 
@@ -39,7 +39,7 @@ private:
 private:
 	QWidget* m_TabPage;
 	Ui::HansRobotControls m_ui;
-	LancetHansRobot* m_Robot;
+	LancetJakaRobot* m_Robot;
 	mitk::DataStorage* m_dataStorage;
 	AbstractCamera* m_Camera;
 
