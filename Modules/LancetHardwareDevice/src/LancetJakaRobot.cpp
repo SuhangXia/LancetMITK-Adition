@@ -6,7 +6,7 @@ LancetJakaRobot::LancetJakaRobot()
 	m_InitialPos = vtkSmartPointer<vtkMatrix4x4>::New();
 	m_FlangeToTCP = vtkSmartPointer<vtkMatrix4x4>::New();
 	SetRobotIpAddress("192.168.2.1");
-	JAKAZuRobot m_Robot;
+	JAKAZuRobot m_Robot= JAKAZuRobot();
 }
 
 void LancetJakaRobot::Connect()
