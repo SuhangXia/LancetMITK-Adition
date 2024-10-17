@@ -283,3 +283,25 @@ void FileIO::WritePolyDataAsSTL(vtkPolyData* polyData, std::string fileName)
 	stlWriter->Write();
 }
 
+void FileIO::SaveDataNodeAsSTL(mitk::DataNode* aDataNode, std::string aFileName)
+{
+	mitk::Surface::Pointer surface = dynamic_cast<mitk::Surface*>(aDataNode->GetData());
+	if (surface.IsNull())
+	{
+		MITK_ERROR << "DataNode does not contain a surface!";
+		return;
+	}
+	else
+	{
+		try
+		{
+			mitk::IOUtil::Save(surface, aFileName);
+			MITK_INFO << "Surface saved to " << aFileName;
+		}
+		catch (const mitk::Exception& e)
+		{
+			MITK_ERROR << "Failed to save surface to file: " << e.what();
+		}
+	}
+}
+

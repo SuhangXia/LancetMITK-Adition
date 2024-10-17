@@ -87,6 +87,8 @@ void lancetAlgorithm::ChunLiTray::SerializerFemoralImplant(std::string path)
 
 					//计算水平方向，用于计算内外旋
 					m_ModelOrientation = CalculationHelper::CalculateDirection(m_FrontOrientationPoint, m_BackOrientationPoint);
+					m_ProximalCutFilePath = data["ProximalCutFilePath"];
+					std::cout << "m_ProximalCutFilePath: " << m_ProximalCutFilePath << std::endl;
 					std::string thicknessStr = data["thickness"];
 					thickness = std::stod(thicknessStr);
 					Eigen::Vector3d origin;
@@ -143,6 +145,11 @@ Eigen::Vector3d lancetAlgorithm::ChunLiTray::GetProximalNormal()
 vtkSmartPointer<vtkMatrix4x4> lancetAlgorithm::ChunLiTray::GetTrayMatrix()
 {
 	return m_Matrix;
+}
+
+std::string lancetAlgorithm::ChunLiTray::GetProximalCutFilePath()
+{
+	return m_ProximalCutFilePath;
 }
 
 Eigen::Vector3d lancetAlgorithm::ChunLiTray::GetFrontOrientationPoint()

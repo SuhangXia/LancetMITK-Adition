@@ -22,7 +22,7 @@ public:
 
 	vtkSmartPointer<vtkMatrix4x4> GetToolMatrixByName(std::string aToolName) override;
 
-	void InitToolsName(std::vector<std::string> aToolsName, std::vector<QLabel*>* aLabels = nullptr) override;
+	void InitToolsName(std::vector<std::string> aToolsName) override;
 
 	void DisplayArea(short width, short height, short leftX, short leftY, short rightX, short
 		rightY);

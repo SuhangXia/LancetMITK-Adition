@@ -43,6 +43,9 @@ namespace lancetAlgorithm
 		std::vector<Eigen::Vector3d> GetGapPoints();
 		double GetDistalCutWithPosteriorChamferCutAngle();
 		double GetChamferCutWithPosterioCutAngle();
+		std::string GetDistalCutFilePath();
+		std::string GetPosterioCutFilePath();
+		std::string GetPostriorChamferCutFilePath();
 	private:
 		void SerializerFemoralImplant(std::string path);
 		void UpdateMechanicalAxis();
@@ -81,6 +84,9 @@ namespace lancetAlgorithm
 		double m_FemurImplantSize;
 		double m_TibiaInsertSize;
 		QTimer* m_IntraTransformTimer = nullptr;
+		std::string m_DistalCutFilePath;
+		std::string m_PosteriorCutFilePath;
+		std::string m_PosteriorChamferFilePath;
 	};
 }
 #endif // !PKAFEMORLAImplant

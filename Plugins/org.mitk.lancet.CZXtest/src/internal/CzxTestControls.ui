@@ -40,7 +40,7 @@
       </font>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="widget">
       <attribute name="title">
@@ -4377,6 +4377,19 @@
         <string>显示司灵机械臂V2</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="RenderBtn">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>440</y>
+         <width>191</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Render</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab_5">
       <attribute name="title">
@@ -5520,7 +5533,7 @@
         <string>仿真远端截骨初始位置</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="GoToAnteriorChamferInitialPosBtn">
+      <widget class="QPushButton" name="GoToPosteriorChamferInitialPosBtn">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -6056,6 +6069,32 @@
        </property>
        <property name="text">
         <string>绘制平面</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="GenerativeImplantSecurityBoundaryBtn">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>360</y>
+         <width>191</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>生成股骨假体安全边界</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="GenerativeTraySecurityBoundaryBtn">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>410</y>
+         <width>191</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>生成胫骨假体安全边界</string>
        </property>
       </widget>
      </widget>

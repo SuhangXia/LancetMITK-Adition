@@ -11,29 +11,26 @@ found in the LICENSE file.
 ============================================================================*/
 
 
-#ifndef HansRobot_h
-#define HansRobot_h
+#ifndef InstantiationCamera_h
+#define InstantiationCamera_h
 
 #include <berryISelectionListener.h>
 
 #include <QmitkAbstractView.h>
-#include "AimCamera.h"
-#include "ui_HansRobotControls.h"
-#include <LancetJakaRobot.h>
-#include "ConnectionTab.h"
-#include "RobotArmRegistrationTab.h"
-
-#include "DianaRobot.h"
+#include <mitkIRenderWindowPartListener.h>
+#include "ui_InstantiationCameraControls.h"
+#include <AriemediCamera.h>
+#include "CameraConnectionTab.h"
 
 /**
-  \brief HansRobot
+  \brief InstantiationCamera
 
   \warning  This class is not yet documented. Use "git blame" and ask the author to provide basic documentation.
 
   \sa QmitkAbstractView
   \ingroup ${plugin_target}_internal
 */
-class HansRobot : public QmitkAbstractView
+class InstantiationCamera : public QmitkAbstractView//, public mitk::IRenderWindowPartListener
 {
   // this is needed for all Qt objects that should have a Qt meta-object
   // (everything that derives from QObject and wants to have signal/slots)
@@ -41,28 +38,25 @@ class HansRobot : public QmitkAbstractView
 
 public:
   static const std::string VIEW_ID;
-  void callUpdate();
-public slots:
-    
+
 protected:
   virtual void CreateQtPartControl(QWidget *parent) override;
- 
+
   virtual void SetFocus() override;
 
   /// \brief called by QmitkFunctionality when DataManager's selection has changed
   virtual void OnSelectionChanged(berry::IWorkbenchPart::Pointer source,
                                   const QList<mitk::DataNode::Pointer> &nodes) override;
 
-  /// \brief Called when the user clicks the GUI button
-  void DoImageProcessing();
+  //void RenderWindowPartActivated(mitk::IRenderWindowPart* renderWindowPart) override;
+  //void RenderWindowPartDeactivated(mitk::IRenderWindowPart* renderWindowPart) override;
 
-  Ui::HansRobotControls m_Controls;
-  LancetJakaRobot* m_Robot;
-  AimCamera* m_Camera;
-  ConnectionTab* m_ConnectionTab;
-  RobotArmRegistrationTab* m_RobotArmRegistrationTab;
-  
-  //std::shared_ptr<RobotArmRegistrationTab> mRobotArmRegistrationTab;
+  /// \brief Called when the user clicks the GUI button
+
+private:
+  Ui::InstantiationCameraControls m_Controls;
+  AriemediCamera* m_Camera;
+  CameraConnectionTab* m_CameraConnectionTab;
 };
 
-#endif // HansRobot_h
+#endif // InstantiationCamera_h

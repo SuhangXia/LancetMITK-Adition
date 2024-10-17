@@ -25,6 +25,8 @@ class RobotArmRegistrationTab : public QWidget
 
 	Q_OBJECT
 public:
+	int countNum;
+public:
 	RobotArmRegistrationTab(Ui::HansRobotControls ui, mitk::DataStorage* aDataStorage, AbstractRobot* aRobot, AbstractCamera* aCamera, QWidget* parent = nullptr);
 
 public slots:
@@ -50,6 +52,8 @@ private:
 	void waitMove();
 	void autoCollection();
 	
+	void RepeatPositionTest();
+	void AboslutePositionTest();
 private:
 	QWidget* m_TabPage;
 	Ui::HansRobotControls m_ui;

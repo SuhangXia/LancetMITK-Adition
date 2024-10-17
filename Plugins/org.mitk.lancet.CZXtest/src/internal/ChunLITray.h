@@ -2,7 +2,7 @@
 #ifndef CHUNLITRAY
 #define CHUNLITRAY
 
-
+#include <string>
 #include <iostream>
 #include <eigen3/Eigen/Dense>
 #include <nlohmann/json.hpp>
@@ -36,6 +36,7 @@ namespace lancetAlgorithm
 
 		//胫骨图像坐标系到胫骨假体的位姿变换
 		vtkSmartPointer<vtkMatrix4x4> GetTrayMatrix();
+		std::string GetProximalCutFilePath();
 	private:
 		void SerializerFemoralImplant(std::string path);
 		
@@ -55,6 +56,7 @@ namespace lancetAlgorithm
 		vtkSmartPointer<vtkPolyData> m_OriginalMechanicalPolyData;
 		vtkSmartPointer<vtkPolyData> m_OriginOrientationPolyData;
 		vtkSmartPointer<vtkTransformPolyDataFilter> m_TransformPolyDataFilter;
+		std::string m_ProximalCutFilePath;
 		double m_TibiaTraySize;
 		double thickness = 0.0;
 	};

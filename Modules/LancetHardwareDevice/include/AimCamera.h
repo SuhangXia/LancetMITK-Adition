@@ -18,7 +18,7 @@ public:
 
 	vtkSmartPointer<vtkMatrix4x4> GetToolMatrixByName(std::string aToolName) override;
 
-	void InitToolsName(std::vector<std::string> aToolsName, std::vector<QLabel*>* aLabels = nullptr) override;
+	void InitToolsName(std::vector<std::string> aToolsName) override;
 
 private:
 	T_AimToolDataResult* GetNewToolData();

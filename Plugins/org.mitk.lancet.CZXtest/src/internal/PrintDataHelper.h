@@ -1,4 +1,5 @@
 #pragma once
+#include <mitkPoint.h>
 #include <QTextBrowser>
 #include <vtkMatrix4x4.h>
 #include <eigen3/Eigen/Dense>
@@ -30,6 +31,19 @@
                 str += QString::number(element) + " ";
             }
             browser->append(arrayName + str);
+        }
+
+        template <typename TPoint>
+        static void CoutMitkPoint(const TPoint& aPoint, std::string aPointName)
+        {
+            std::cout << aPointName + " :(";
+            for (unsigned int i = 0; i < aPoint.GetPointDimension(); ++i) {
+                std::cout << aPoint[i];
+                if (i < aPoint.GetPointDimension() - 1) {
+                    std::cout << ", ";
+                }
+            }
+            std::cout << ")" << std::endl;
         }
     };
 

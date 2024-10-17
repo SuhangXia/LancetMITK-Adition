@@ -123,6 +123,21 @@ double lancetAlgorithm::ChunLiXGImplant::GetChamferCutWithPosterioCutAngle()
 	return CalculationHelper::CalculateAngle(posteriorChamferNormalDirection, posteriorNormalDirection);
 }
 
+std::string lancetAlgorithm::ChunLiXGImplant::GetDistalCutFilePath()
+{
+	return m_DistalCutFilePath;
+}
+
+std::string lancetAlgorithm::ChunLiXGImplant::GetPosterioCutFilePath()
+{
+	return m_PosteriorCutFilePath;
+}
+
+std::string lancetAlgorithm::ChunLiXGImplant::GetPostriorChamferCutFilePath()
+{
+	return m_PosteriorChamferFilePath;
+}
+
 void ChunLiXGImplant::SerializerFemoralImplant(std::string path)
 {
 	std::ifstream ifs(m_JsonPath);
@@ -210,6 +225,13 @@ void ChunLiXGImplant::SerializerFemoralImplant(std::string path)
 					load(data["ProudPoint"], "ProudPoint", m_ProudPoint, tmp);
 					load(data["SmallHolePoint"], "SmallHolePoint", m_ProudSmallHole, tmp);
 					load(data["BigHolePoint"], "BigHolePoint", m_ProudBigHole, tmp);
+					m_DistalCutFilePath = data["DistalCutFilePath"];
+					
+					m_PosteriorCutFilePath = data["PosteriorCutFilePath"];
+					m_PosteriorChamferFilePath = data["PosteriorChamferCutFilePath"];
+					std::cout << "m_DistalCutFilePath: " << m_DistalCutFilePath << std::endl;
+					std::cout << "m_PosteriorCutFilePath: " << m_PosteriorCutFilePath << std::endl;
+					std::cout << "m_PosteriorChamferFilePath: " << m_PosteriorChamferFilePath << std::endl;
 					m_ModelOrientation = CalculationHelper::CalculateDirection(m_FrontOrientationPoint, m_BackOrientationPoint);
 
 					std::vector<double> points = data["ContactPoints"].get<std::vector<double>>();

@@ -9,7 +9,6 @@
 #include "Environment.h"
 #include "FunctionOptDef.h"
 #include "MitkLancetHardwareDeviceExports.h"
-
 class MITKLANCETHARDWAREDEVICE_EXPORT DianaRobot : public AbstractRobot
 {
 public:
@@ -59,5 +58,7 @@ public:
 
 	void WaitMove() override;
 
+private:
+	double m_InitialPos[6] = { 0,0,0,0,0,0 };
 };
 #endif

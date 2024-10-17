@@ -276,6 +276,7 @@ public:
   void SaveRobotJoint2LinkBtnClicked();
   void ConnectJointControl(QPushButton* plusBtn, QPushButton* minusBtn, QLineEdit* lineEdit, int jointIndex, RobotFrame* robotFrame);
   void InitRobotSimulation();
+  void RenderBtnClicked();
   RobotFrame* m_RobotFrame;
   RobotFrame2* m_RobotFrame2;
   std::vector<QLineEdit*> m_RobotJointsAngleLineEdit;
@@ -350,7 +351,8 @@ public:
   void ReadJsonBtnClicked();
   void SelectJsonPathBtnClicked();
   void WriteTuoJsonBtnClicked();
-
+  void GenerativeImplantSecurityBoundaryBtnClicked();
+  void GenerativeTraySecurityBoundaryBtnClicked();
   //tab
   void VerifyProbeBtn();
 public slots:
@@ -402,7 +404,7 @@ private:
 
         return true;
     }
-
+    void OnTabChanged(int aIndex);
 private slots:
         void RenderViewAndWidget();
         void Render3D();
@@ -468,6 +470,10 @@ private:
   std::string m_DrillEndTipDirectoryPath = std::string(getenv("USERPROFILE")) + "\\Desktop\\PKAModelData\\DrillEndTip\\";
 
   std::vector<QLineEdit*> m_RobotJointAngleLineEdits;
+
+
+  std::string m_InitCutFilePath = "E:\\PKAModelData";
+  CutPlane m_IntraDrillPlane = CutPlane::DistalCut;
 };
 
 #endif // CzxTest_h

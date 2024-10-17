@@ -119,7 +119,7 @@ vtkSmartPointer<vtkMatrix4x4> AimCamera::GetToolMatrixByName(std::string aToolNa
 	return vtkSmartPointer<vtkMatrix4x4>();
 }
 
-void AimCamera::InitToolsName(std::vector<std::string> aToolsName, std::vector<QLabel*>* aLabels)
+void AimCamera::InitToolsName(std::vector<std::string> aToolsName)
 {
 	this->ResetTools();
 	for (int i = 0; i < aToolsName.size(); ++i)
@@ -130,14 +130,6 @@ void AimCamera::InitToolsName(std::vector<std::string> aToolsName, std::vector<Q
 		Eigen::Vector3d tip(0, 0, 0);
 		m_ToolMatrixMap.emplace(std::pair(aToolsName[i], m));
 		m_ToolTipMap.emplace(std::pair(aToolsName[i], tip));
-		if (aLabels && i < aLabels->size())
-		{
-			m_ToolLabelMap.emplace(std::pair(aToolsName[i], (*aLabels)[i]));
-		}
-		else
-		{
-			m_ToolLabelMap.emplace(std::pair(aToolsName[i], nullptr));
-		}
 	}
 }
 

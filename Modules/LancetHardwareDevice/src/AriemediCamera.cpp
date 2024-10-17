@@ -102,7 +102,7 @@ vtkSmartPointer<vtkMatrix4x4> AriemediCamera::GetToolMatrixByName(std::string aT
 	return ret;
 }
 
-void AriemediCamera::InitToolsName(std::vector<std::string> aToolsName, std::vector<QLabel*>* aLabels)
+void AriemediCamera::InitToolsName(std::vector<std::string> aToolsName)
 {
 	this->ResetTools();
 	for (int i = 0; i < aToolsName.size(); ++i)
@@ -216,4 +216,5 @@ void AriemediCamera::UpdateData()
 	UpdateImageData();
 
 	emit CameraUpdateClock();
+
 }

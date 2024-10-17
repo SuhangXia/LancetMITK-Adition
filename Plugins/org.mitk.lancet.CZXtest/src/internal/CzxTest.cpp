@@ -87,7 +87,7 @@ void CzxTest::CreateQtPartControl(QWidget* parent)
 	this->OnCurrentSelectionChanged(m_Controls.selectedPointSetWidget->GetSelectedNodes());
 	connect(m_Controls.CalcualtePointSetCenterBtn, &QPushButton::clicked, this, &CzxTest::CalcualtePointSetCenterBtnClicked);
 	connect(m_Controls.RotateTibiaByCenterBtn, &QPushButton::clicked, this, &CzxTest::RotateTibiaByCenterBtnClicked);
-	
+
 	connect(m_Controls.ClockWiseBtn, &QPushButton::clicked, this, [this]()
 		{
 			OnPrePlanViewTypeChanged(0);
@@ -118,8 +118,10 @@ void CzxTest::CreateQtPartControl(QWidget* parent)
 	connect(m_Controls.CaptureVerifyBtn, &QPushButton::clicked, this, &CzxTest::CapturVerifyBtnClicked);
 	connect(m_Controls.ClearVerifyPointBtn, &QPushButton::clicked, this, &CzxTest::ClearVerifyPointBtnClicked);
 	connect(m_Controls.VerifyPointBtn, &QPushButton::clicked, this, &CzxTest::VerifyPointBtnClicked);
-	
-	std::cout<<"ITK Version: "<<itk::Version::GetITKVersion()<<std::endl;
+
+	std::cout << "ITK Version: " << itk::Version::GetITKVersion() << std::endl;
+
+	connect(m_Controls.tabWidget, &QTabWidget::currentChanged, this, &CzxTest::OnTabChanged);
 }
 
 void CzxTest::OnSelectionChanged(berry::IWorkbenchPart::Pointer /*source*/,
@@ -154,7 +156,7 @@ void CzxTest::RenderWindowPartActivated(mitk::IRenderWindowPart* renderWindowPar
 	m_Controls.poinSetListWidget->AddSliceNavigationController(renderWindowPart->GetQmitkRenderWindow("axial")->GetSliceNavigationController());
 	m_Controls.poinSetListWidget->AddSliceNavigationController(renderWindowPart->GetQmitkRenderWindow("sagittal")->GetSliceNavigationController());
 	m_Controls.poinSetListWidget->AddSliceNavigationController(renderWindowPart->GetQmitkRenderWindow("coronal")->GetSliceNavigationController());
-	m_IntraOsteotomy = new IntraOsteotomy(this->GetDataStorage(),m_PKADianaAimHardwareDevice);
+	
 	m_PreoPreparation = new PreoPreparation(m_PKADianaAimHardwareDevice);
 	m_WorldAxes = PKARenderHelper::GenerateAxesActor();
 	vtkSmartPointer<vtkMatrix4x4> worldAxesMatrix = vtkSmartPointer<vtkMatrix4x4>::New();
@@ -358,7 +360,7 @@ void CzxTest::ReadRobotJointAnglesBtnClicked()
 	auto angles = m_PKADianaAimHardwareDevice->GetJointAngles();
 	for (int i = 0; i < angles.size(); ++i)
 	{
-		m_RobotJointAngleLineEdits[i]->setText(QString::number(angles[i]*180/PI));
+		m_RobotJointAngleLineEdits[i]->setText(QString::number(angles[i] * 180 / PI));
 	}
 }
 
@@ -367,7 +369,7 @@ void CzxTest::SetRobotJointAnglesBtnClicked()
 	double angles[7] = { 0.0 };
 	for (int i = 0; i < m_RobotJointAngleLineEdits.size(); ++i)
 	{
-		angles[i] = m_RobotJointAngleLineEdits[i]->text().toDouble()/180*PI;
+		angles[i] = m_RobotJointAngleLineEdits[i]->text().toDouble() / 180 * PI;
 	}
 
 	bool ret = m_PKADianaAimHardwareDevice->SetJointAngles(angles);
@@ -476,7 +478,7 @@ void CzxTest::DisplayCameraToTCPAxesBtnClicked()
 	if (!m_IsDisplayTCP)
 	{
 		m_IsDisplayTCP = !m_IsDisplayTCP;
-		
+
 		m_PKADianaAimHardwareDevice->DisplayBase2TCP(renderpart);
 		connect(m_AimoeVisualizeTimer, SIGNAL(timeout()), this, SLOT(UpdateTCPAxesActor()));
 	}
@@ -500,7 +502,7 @@ void CzxTest::SetTCPByProbeTipBtnClicked()
 	vtkSmartPointer<vtkMatrix4x4> TBaseRF2Base = vtkSmartPointer<vtkMatrix4x4>::New();
 	TCamera2BaseRF->DeepCopy(PKAData::m_TCamera2BaseRF);
 	TBaseRF2Base->DeepCopy(PKAData::m_TBaseRF2Base);
-	vtkSmartPointer<vtkMatrix4x4> TFlange2Camera= vtkSmartPointer<vtkMatrix4x4>::New();
+	vtkSmartPointer<vtkMatrix4x4> TFlange2Camera = vtkSmartPointer<vtkMatrix4x4>::New();
 
 	TFlange2Camera->DeepCopy(CalculationHelper::PreConcatenateMatrixs(TCamera2BaseRF, TBaseRF2Base, TBase2Flange));
 	TFlange2Camera->Invert();
@@ -771,15 +773,15 @@ void CzxTest::VerifyPointBtnClicked()
 	double distance = 0.0;
 	Eigen::Vector3d verifyPointInRF = m_PKADianaAimHardwareDevice->GetProbeTip();
 	vtkSmartPointer<vtkMatrix4x4> TRF2Camera = vtkSmartPointer<vtkMatrix4x4>::New();
-	if (m_Controls.FemurVerifyPointBtn->isChecked()&& m_IsCaptureFemurVerifyPoint)
+	if (m_Controls.FemurVerifyPointBtn->isChecked() && m_IsCaptureFemurVerifyPoint)
 	{
 		TRF2Camera->DeepCopy(PKAData::m_TCamera2FemurRF);
 		TRF2Camera->Invert();
 		verifyPointInRF = CalculationHelper::TransformByMatrix(m_PKADianaAimHardwareDevice->GetProbeTip(), TRF2Camera);
-		distance =  CalculationHelper::CalculateTwoPointsDistance(PKAData::m_FemurVerifyPointInFemurRF, verifyPointInRF);
+		distance = CalculationHelper::CalculateTwoPointsDistance(PKAData::m_FemurVerifyPointInFemurRF, verifyPointInRF);
 	}
-	
-	if(m_Controls.TibiaVerifyPointBtn->isChecked() && m_IsCaptureTibiaVerifyPoint)
+
+	if (m_Controls.TibiaVerifyPointBtn->isChecked() && m_IsCaptureTibiaVerifyPoint)
 	{
 		TRF2Camera->DeepCopy(PKAData::m_TCamera2TibiaRF);
 		TRF2Camera->Invert();
@@ -900,7 +902,7 @@ void CzxTest::RegisterImageBtnClicked()
 		vtkSmartPointer<vtkPoints> verifyPoints = m_ModelRegistration->GetScreenPoint();
 		vtkSmartPointer<vtkTransform> verifyPointsTrasnform = vtkSmartPointer<vtkTransform>::New();
 		verifyPointsTrasnform->SetMatrix(m_ModelRegistration->GetICPMatrix());
-		
+
 		verifyPointsTrasnform->TransformPoints(verifyPoints, transformedPoints);
 		PKARenderHelper::AddvtkPointsToMitk(this->GetDataStorage(), transformedPoints, PKAData::m_FemurRegistrationVerifyNodeName.toStdString(), 2, registrationVerifyPointColor);
 	}
@@ -1173,7 +1175,7 @@ void CzxTest::InitRobotRegistrationTabConnection()
 	connect(m_Controls.ReadRobotJointAnglesBtn, &QPushButton::clicked, this, &CzxTest::ReadRobotJointAnglesBtnClicked);
 	connect(m_Controls.SetRobotJointAnglesBtn, &QPushButton::clicked, this, &CzxTest::SetRobotJointAnglesBtnClicked);
 	connect(m_Controls.GetRobotJointsLimitBtn, &QPushButton::clicked, this, &CzxTest::GetRobotJointsLimitBtnClicked);
-	
+
 	connect(m_Controls.SetRobotPositionModeBtn, &QPushButton::clicked, this, &CzxTest::SetRobotPositionModeBtnClicked);
 	connect(m_Controls.SetRobotJointsImpedanceModelBtn, &QPushButton::clicked, this, &CzxTest::SetRobotJointsImpedanceModelBtnClicked);
 	connect(m_Controls.SetRobotCartImpedanceModeBtn, &QPushButton::clicked, this, &CzxTest::SetRobotCartImpedanceModeBtnClicked);
@@ -1322,6 +1324,7 @@ void CzxTest::InitModelDispalyTabConnection()
 	connect(m_Controls.SaveRobotJoint2LinkBtn, &QPushButton::clicked, this, &CzxTest::SaveRobotJoint2LinkBtnClicked);
 	connect(m_Controls.DisplayDiania7RobotBtn, &QPushButton::clicked, this, &CzxTest::DisplayDiania7RobotBtnClicked);
 	connect(m_Controls.DisplayDianaRobotV2Btn, &QPushButton::clicked, this, &CzxTest::DisplayDianaRobotV2BtnClicked);
+	connect(m_Controls.RenderBtn, &QPushButton::clicked, this, &CzxTest::RenderBtnClicked);
 }
 
 void CzxTest::InitMakeProsthesisConfigTabConnection()
@@ -1334,6 +1337,8 @@ void CzxTest::InitMakeProsthesisConfigTabConnection()
 	connect(m_Controls.ReadJsonBtn, &QPushButton::clicked, this, &CzxTest::ReadJsonBtnClicked);
 	connect(m_Controls.ChangeModelColorBtn, &QPushButton::clicked, this, &CzxTest::ChangeModelColorBtnClicked);
 	connect(m_Controls.WriteTuoJsonBtn, &QPushButton::clicked, this, &CzxTest::WriteTuoJsonBtnClicked);
+	connect(m_Controls.GenerativeImplantSecurityBoundaryBtn, &QPushButton::clicked, this, &CzxTest::GenerativeImplantSecurityBoundaryBtnClicked);
+	connect(m_Controls.GenerativeTraySecurityBoundaryBtn, &QPushButton::clicked, this, &CzxTest::GenerativeTraySecurityBoundaryBtnClicked);
 }
 
 void CzxTest::InitIntraOsteotomyTabConnection()
@@ -1473,6 +1478,8 @@ void CzxTest::InitIntraOsteotomyTabConnection()
 
 	connect(m_Controls.AddDrillEndTipModelBtn, &QPushButton::clicked, this, &CzxTest::AddDrillEndTipModelBtnClicked);
 	connect(m_Controls.GoToDistalInitialPosBtn, &QPushButton::clicked, this, &CzxTest::GoToDistalInitialPosBtnClicked);
+	connect(m_Controls.GoToPoteriorInitialPosBtn, &QPushButton::clicked, this, &CzxTest::GoToPoteriorInitialPosBtnClicked);
+	connect(m_Controls.GoToPosteriorChamferInitialPosBtn, &QPushButton::clicked, this, &CzxTest::GoToPosteriorChamferInitialPosBtnClicked);
 	connect(m_Controls.InitialFemurOsteotomyModelBtn, &QPushButton::clicked, this,
 		[this]() {InitalOsteotomyModelBtnClicked("DrillEndTip",
 			PKAData::m_FemurImplantNodeName.toStdString(), PKAData::m_FemurClippedSurfaceNodeName.toStdString()); });
@@ -1490,7 +1497,7 @@ void CzxTest::InitGlobalVariable()
 	m_PKAHardwareDevice = new PKAKukaVegaHardwareDevice(this->GetDataStorage());
 	m_PKADianaAimHardwareDevice = new PKADianaAimHardwareDevice();
 	m_AngleCalculationHelper = new AngleCalculationHelper(this->GetDataStorage());
-	
+
 	PKAData::m_SurgicalSide = PKASurgicalSide::Left;
 	m_TiltRadioBtnGroup = new QButtonGroup(this);
 	m_TiltRadioBtnGroup->addButton(m_Controls.FrontTiltRadioBtn, 0);
@@ -1537,7 +1544,7 @@ void CzxTest::DisplayAuxiliaryModel()
 	if (m_FemoralImplant)
 	{
 		PKARenderHelper::DisplayDirection(this->GetDataStorage(), m_FemoralImplant->GetDistalCut(), m_FemoralImplant->GetDistalCutNormal(), "FemurDistalLine", color);
-		
+
 		PKARenderHelper::DisplayDirection(this->GetDataStorage(), m_FemoralImplant->GetFrontOrientationPoint(), m_FemoralImplant->GetBackOrientationPoint(), "FemurOrientationLine", orientationColor);
 		PKARenderHelper::AddPointSetToMitk(this->GetDataStorage(), std::vector<Eigen::Vector3d>{m_FemoralImplant->GetProudPoint()}, "FemurProudPoint", 5, color);
 	}
@@ -1604,6 +1611,16 @@ Eigen::Vector3d CzxTest::GetRotationDirectionByViewType(ViewType viewType, bool 
 		return direction;
 	}
 	return direction;
+}
+
+void CzxTest::OnTabChanged(int aIndex)
+{
+	std::cout << "OnTabChanged: " << aIndex << std::endl;
+	if (aIndex == 8)
+	{
+		std::cout << "Structural IntraOsteotomy Class" << std::endl;
+		m_IntraOsteotomy = new IntraOsteotomy(this->GetDataStorage(), m_PKADianaAimHardwareDevice, m_FemoralImplant, m_TibiaTray);
+	}
 }
 
 void CzxTest::Render3D()
@@ -1865,7 +1882,7 @@ void CzxTest::DisplayHansRobotModelBtnClicked()
 	std::vector<RobotJoint*> joints;
 	for (int i = 0; i < partDescriptions.size(); ++i)
 	{
-		auto& part =  partDescriptions[i];
+		auto& part = partDescriptions[i];
 		/*part.DH[2] = CalculationHelper::FromDegreeToRadian(part.DH[2]);
 		part.DH[3] = CalculationHelper::FromDegreeToRadian(part.DH[3]);	*/
 		RobotJoint* joint = new RobotJoint(part);
@@ -1949,9 +1966,9 @@ void CzxTest::DisplayDiana7RobotWithOfficialDH()
 	baseDescription.FileName = hansRobotPath + "Base.stl";
 	baseDescription.Name = "Base";
 	RobotBase* base = new RobotBase(baseDescription);
-	double a[7] = { 0.000000, 0.000000, 0.000000, 0.064000, - 0.052000, - 0.012000, 0.086000 };
-	double alpha[7] = { 3.141593, 1.570882, - 1.571508, 1.570849, - 1.571323, - 1.572120, - 1.573178 };
-	double d[7] = { -0.285000, 0.000000, - 0.458000, 0.000000 ,- 0.455000 ,- 0.000000, - 0.116000 };
+	double a[7] = { 0.000000, 0.000000, 0.000000, 0.064000, -0.052000, -0.012000, 0.086000 };
+	double alpha[7] = { 3.141593, 1.570882, -1.571508, 1.570849, -1.571323, -1.572120, -1.573178 };
+	double d[7] = { -0.285000, 0.000000, -0.458000, 0.000000 ,-0.455000 ,-0.000000, -0.116000 };
 	double theta[7] = { 0.0, 0.0,0.0, 0.0, 0.0, 0.0, 0.0 };
 	JointPartDescription Joint1Description = { "Joint1", hansRobotPath + "J1.stl", {-180, 180}, {-218, 0, -90, -90} };
 	JointPartDescription Joint2Description = { "Joint2", hansRobotPath + "J2.stl", {-180, 180}, {115.75, 380, 180, 90} };
@@ -1968,23 +1985,23 @@ void CzxTest::DisplayDiana7RobotWithOfficialDH()
 	partDescriptions.push_back(Joint5Description);
 	partDescriptions.push_back(Joint6Description);
 	partDescriptions.push_back(Joint7Description);
-	
+
 	std::vector<RobotJoint*> joints;
 	for (int i = 0; i < partDescriptions.size(); ++i)
 	{
 		auto& part = partDescriptions[i];
-		
+
 		part.DH[0] = d[i] * 1000;
 		part.DH[1] = a[i] * 1000;
 
 		part.DH[2] = alpha[i];//CalculationHelper::FromDegreeToRadian(alpha[i]);
 		part.DH[3] = theta[i];//CalculationHelper::FromDegreeToRadian(theta[i]);	
-		std::cout << "Joint"<<i<<" d: " << part.DH[0] << " a: " << part.DH[1] << " alpha: " << part.DH[2] << " theta: " << part.DH[3] << std::endl;
+		std::cout << "Joint" << i << " d: " << part.DH[0] << " a: " << part.DH[1] << " alpha: " << part.DH[2] << " theta: " << part.DH[3] << std::endl;
 		RobotJoint* joint = new RobotJoint(part);
 		joints.push_back(std::move(joint));
 	}
 	m_RobotFrame2 = new RobotFrame2(this->GetDataStorage(), joints, base);
-	
+
 	m_RobotFrame2->Display(this->GetRenderWindowPart());
 }
 
@@ -1995,20 +2012,20 @@ void CzxTest::GetCurrentNode2DActorBtnClicked()
 
 void CzxTest::RotateModelAndSaveBtnClicked()
 {
-	 std::string hansRobotPath = "E:\\PKAModelData\\HansRobotFrame2\\";
-	 auto surface = (mitk::Surface*)this->GetDataStorage()->GetNamedNode("Joint1")->GetData();
-	 auto polyData = surface->GetVtkPolyData();
-	 vtkSmartPointer<vtkTransformPolyDataFilter> filter = vtkSmartPointer<vtkTransformPolyDataFilter>::New();
-	 filter->SetInputData(polyData);
-	 vtkSmartPointer<vtkTransform> transform = vtkSmartPointer<vtkTransform>::New();
-	 transform->RotateZ(90);
-	 //transform->RotateX(180);
-	 transform->Update();
-	 filter->SetTransform(transform);
-	 filter->Update();
-	 vtkSmartPointer<vtkPolyData> transformedPolyData = vtkSmartPointer<vtkPolyData>::New();
-	 transformedPolyData->DeepCopy(filter->GetOutput());
-	 FileIO::WritePolyDataAsSTL(transformedPolyData, hansRobotPath + "Joint1Back.stl");
+	std::string hansRobotPath = "E:\\PKAModelData\\HansRobotFrame2\\";
+	auto surface = (mitk::Surface*)this->GetDataStorage()->GetNamedNode("Joint1")->GetData();
+	auto polyData = surface->GetVtkPolyData();
+	vtkSmartPointer<vtkTransformPolyDataFilter> filter = vtkSmartPointer<vtkTransformPolyDataFilter>::New();
+	filter->SetInputData(polyData);
+	vtkSmartPointer<vtkTransform> transform = vtkSmartPointer<vtkTransform>::New();
+	transform->RotateZ(90);
+	//transform->RotateX(180);
+	transform->Update();
+	filter->SetTransform(transform);
+	filter->Update();
+	vtkSmartPointer<vtkPolyData> transformedPolyData = vtkSmartPointer<vtkPolyData>::New();
+	transformedPolyData->DeepCopy(filter->GetOutput());
+	FileIO::WritePolyDataAsSTL(transformedPolyData, hansRobotPath + "Joint1Back.stl");
 }
 
 void CzxTest::CalculateJointToLinkMatrix(vtkMatrix4x4* TImage2PreJoint, vtkMatrix4x4* TImage2Joint, vtkMatrix4x4* TPreJoint2Joint)
@@ -2070,6 +2087,19 @@ void CzxTest::InitRobotSimulation()
 	ConnectJointControl(m_Controls.Joint5PlusBtn, m_Controls.Joint5MinusBtn, m_Controls.Joint5AngleLineEdit, 4, m_RobotFrame);
 	ConnectJointControl(m_Controls.Joint6PlusBtn, m_Controls.Joint6MinusBtn, m_Controls.Joint6AngleLineEdit, 5, m_RobotFrame);
 	ConnectJointControl(m_Controls.Joint7PlusBtn, m_Controls.Joint7MinusBtn, m_Controls.Joint7AngleLineEdit, 6, m_RobotFrame);
+}
+
+void CzxTest::RenderBtnClicked()
+{
+	auto iRenderWindowPart = GetRenderWindowPart();
+	QmitkRenderWindow* renderWindow = iRenderWindowPart->GetQmitkRenderWindow("3d");
+
+	auto vtkRenderWindow = renderWindow->GetVtkRenderWindow();
+	vtkRenderWindow->Render();
+
+	auto renderer = vtkRenderWindow->GetRenderers()->GetFirstRenderer();
+	renderer->Render();
+	std::cout << "RenderBtnClicked" << std::endl;
 }
 
 void CzxTest::OnPrePointSelect(PrePointCaptureType t)
@@ -2293,6 +2323,7 @@ void CzxTest::ApplyProsthesisBtnClicked()
 			this->GetDataStorage()->Remove(previousNode);
 		}
 		std::string stlPath = FileIO::CombinePath(path.string(), dicName.string()).string();
+		std::cout << "stlPath: " << stlPath << std::endl;
 		PKARenderHelper::LoadSingleMitkFile(this->GetDataStorage(), stlPath, PKAData::m_TibiaTrayNodeName.toStdString());
 		m_TibiaTray = new ChunLiTray(this->GetDataStorage(), stlPath);
 
@@ -2669,7 +2700,7 @@ QString CzxTest::AdaptBoundingObjectName(const QString& name) const
 		newName = QString("%1 %2").arg(name).arg(++counter);
 	}
 
-	return newName;
+		return newName;
 }
 
 void CzxTest::SelectFemurClippedPlanePointBtnClicked()
@@ -3058,7 +3089,7 @@ void CzxTest::UpdateTCPAxesActor()
 
 void CzxTest::InitalOsteotomyModelBtnClicked(std::string drillEndName, std::string prosNodeName, std::string boneNodeName)
 {
-	if(!ValidateRequiredNodes(drillEndName, prosNodeName, boneNodeName))
+	if (!ValidateRequiredNodes(drillEndName, prosNodeName, boneNodeName))
 	{
 		std::cout << "DrillEndTip, pros, bone is missing" << std::endl;
 		return;
@@ -3129,7 +3160,7 @@ void CzxTest::Drill()
 		return;
 	}
 
-	m_IntraOsteotomy->Drill();
+	m_IntraOsteotomy->Drill(m_IntraDrillPlane);
 }
 
 void CzxTest::RotateIntraDrillEndTipAndUpDateAxes(Eigen::Vector3d direction, mitk::DataNode* node, double angle)
@@ -3158,12 +3189,23 @@ void CzxTest::GoToPoteriorInitialPosBtnClicked()
 	}
 	Eigen::Vector3d posteriorPoint = m_FemoralImplant->GetPosteriorCut();
 	Eigen::Vector3d posteriorDrection = CalculationHelper::CalculateDirection(posteriorPoint, m_FemoralImplant->GetPosteriorCutNormal());
-
+	PrintDataHelper::CoutArray(posteriorPoint, "posteriorPoint");
+	PrintDataHelper::CoutArray(posteriorDrection, "posteriorDrection");
 	vtkSmartPointer<vtkMatrix4x4> matrix = vtkSmartPointer<vtkMatrix4x4>::New();
 	matrix->DeepCopy(m_IntraOsteotomy->CalculateFemurDrillEndTipPos(posteriorPoint, posteriorDrection));
 	auto geometry = this->GetDataStorage()->GetNamedNode("DrillEndTip")->GetData()->GetGeometry();
 	geometry->SetIndexToWorldTransformByVtkMatrix(matrix);
 	m_DrillEndTipAxesActor->SetUserMatrix(matrix);
+
+	std::string cutPath = FileIO::CombinePath(m_InitCutFilePath, m_FemoralImplant->GetPosterioCutFilePath()).string();
+	PKARenderHelper::LoadSingleMitkFile(GetDataStorage(), cutPath, "SecurityBoundary");
+
+	auto cutNode = this->GetDataStorage()->GetNamedNode("SecurityBoundary");
+	auto implantGeoMatrix = this->GetDataStorage()->GetNamedNode(
+		PKAData::m_FemurImplantNodeName.toStdString())->GetData()->GetGeometry()->GetVtkMatrix();
+
+	cutNode->GetData()->GetGeometry()->SetIndexToWorldTransformByVtkMatrix(implantGeoMatrix);
+	m_IntraDrillPlane = CutPlane::PosteriorCut;
 }
 
 void CzxTest::GoToDistalInitialPosBtnClicked()
@@ -3180,6 +3222,16 @@ void CzxTest::GoToDistalInitialPosBtnClicked()
 	auto geometry = this->GetDataStorage()->GetNamedNode("DrillEndTip")->GetData()->GetGeometry();
 	geometry->SetIndexToWorldTransformByVtkMatrix(matrix);
 	m_DrillEndTipAxesActor->SetUserMatrix(matrix);
+
+	std::string cutPath = FileIO::CombinePath(m_InitCutFilePath, m_FemoralImplant->GetDistalCutFilePath()).string();
+	PKARenderHelper::LoadSingleMitkFile(GetDataStorage(), cutPath, "SecurityBoundary");
+
+	auto cutNode = this->GetDataStorage()->GetNamedNode("SecurityBoundary");
+	auto implantGeoMatrix = this->GetDataStorage()->GetNamedNode(
+	PKAData::m_FemurImplantNodeName.toStdString())->GetData()->GetGeometry()->GetVtkMatrix();
+
+	cutNode->GetData()->GetGeometry()->SetIndexToWorldTransformByVtkMatrix(implantGeoMatrix);
+	m_IntraDrillPlane = CutPlane::DistalCut;
 }
 
 void CzxTest::GoToPosteriorChamferInitialPosBtnClicked()
@@ -3197,6 +3249,15 @@ void CzxTest::GoToPosteriorChamferInitialPosBtnClicked()
 	auto geometry = this->GetDataStorage()->GetNamedNode("DrillEndTip")->GetData()->GetGeometry();
 	geometry->SetIndexToWorldTransformByVtkMatrix(matrix);
 	m_DrillEndTipAxesActor->SetUserMatrix(matrix);
+	std::string cutPath = FileIO::CombinePath(m_InitCutFilePath, m_FemoralImplant->GetPostriorChamferCutFilePath()).string();
+	PKARenderHelper::LoadSingleMitkFile(GetDataStorage(), cutPath, "SecurityBoundary");
+
+	auto cutNode = this->GetDataStorage()->GetNamedNode("SecurityBoundary");
+	auto implantGeoMatrix = this->GetDataStorage()->GetNamedNode(
+		PKAData::m_FemurImplantNodeName.toStdString())->GetData()->GetGeometry()->GetVtkMatrix();
+
+	cutNode->GetData()->GetGeometry()->SetIndexToWorldTransformByVtkMatrix(implantGeoMatrix);
+	m_IntraDrillPlane = CutPlane::PosteriorChamferCut;
 }
 
 void CzxTest::GoToTibiaProximalInitialPosBtnClicked()
@@ -3213,6 +3274,14 @@ void CzxTest::GoToTibiaProximalInitialPosBtnClicked()
 	auto geometry = this->GetDataStorage()->GetNamedNode("DrillEndTip")->GetData()->GetGeometry();
 	geometry->SetIndexToWorldTransformByVtkMatrix(matrix);
 	m_DrillEndTipAxesActor->SetUserMatrix(matrix);
+	std::string cutPath = FileIO::CombinePath(m_InitCutFilePath, m_TibiaTray->GetProximalCutFilePath()).string();
+	PKARenderHelper::LoadSingleMitkFile(GetDataStorage(), cutPath, "SecurityBoundary");
+	auto cutNode = this->GetDataStorage()->GetNamedNode("SecurityBoundary");
+	auto implantGeoMatrix = this->GetDataStorage()->GetNamedNode(
+		PKAData::m_TibiaTrayNodeName.toStdString())->GetData()->GetGeometry()->GetVtkMatrix();
+	
+	cutNode->GetData()->GetGeometry()->SetIndexToWorldTransformByVtkMatrix(implantGeoMatrix);
+	m_IntraDrillPlane = CutPlane::ProximalCut;
 }
 
 void CzxTest::RobotMoveToFemurDistalBtnClicked()
@@ -3231,7 +3300,7 @@ void CzxTest::RobotMoveToFemurPosteriorChamferBtnClicked()
 {
 	auto posteriorChamferPoint = m_FemoralImplant->GetPosteriorChamferCut();
 	auto posteriorChamferDirection = CalculationHelper::CalculateDirection(posteriorChamferPoint, m_FemoralImplant->GetPosteriorChamferCutNormal());
-	
+
 	auto matrix = m_IntraOsteotomy->CalculateFemurDrillEndVerticalPlane(posteriorChamferPoint, posteriorChamferDirection);
 
 	m_PKADianaAimHardwareDevice->RobotTransformInTCP(matrix->GetData());
@@ -3478,7 +3547,7 @@ void CzxTest::WriteJsonBtnClicked()
 				return;
 			}
 			mitk::PointSet::Pointer contractPointSet = dynamic_cast<mitk::PointSet*>(contractNode->GetData());
-			
+
 			for (auto it = contractPointSet->Begin(); it != contractPointSet->End(); ++it)
 			{
 				mitk::PointSet::PointType point = it->Value();
@@ -3539,6 +3608,28 @@ void CzxTest::WriteJsonBtnClicked()
 			std::string number = FileIO::getFileNameWithoutExtension(filePath.string());
 			std::string stlPath = number + ".STL";
 			data.stl = FileIO::CombinePath(FileIO::GetLastNParts(filePath.parent_path().string(), 4), stlPath).string();
+			std::string distalPath = FileIO::CombinePath(dic, "DistalCut.stl").string();
+			std::string posteriorPath = FileIO::CombinePath(dic, "PosteriorCut.stl").string();
+			std::string posteriorChamferPath = FileIO::CombinePath(dic, "PosteriorChamferCut.stl").string();
+
+			if (!std::filesystem::exists(distalPath))
+			{
+				std::cout << "No " << distalPath << std::endl;
+				return;
+			}
+			if (!std::filesystem::exists(posteriorPath))
+			{
+				std::cout << "No " << posteriorPath << std::endl;
+				return;
+			}
+			if (!std::filesystem::exists(posteriorChamferPath))
+			{
+				std::cout << "No " << posteriorChamferPath << std::endl;
+				return;
+			}
+			distalPath = FileIO::CombinePath(FileIO::GetLastNParts(filePath.parent_path().string(), 4), "DistalCut.stl").string();
+			posteriorPath = FileIO::CombinePath(FileIO::GetLastNParts(filePath.parent_path().string(), 4), "PosteriorCut.stl").string();
+			posteriorChamferPath = FileIO::CombinePath(FileIO::GetLastNParts(filePath.parent_path().string(), 4), "PosteriorChamferCut.stl").string();
 			data.PosteriorChamferCut = Cut(posteriorChamferCut, posteriorChamferCutNormal);
 			data.DistalCut = Cut(distalCut, distalCutNormal);
 			data.PosteriorCut = Cut(posteriorCut, posteriorCutNormal);
@@ -3548,6 +3639,9 @@ void CzxTest::WriteJsonBtnClicked()
 			data.SmallHolePoint = Point(smallHolePoint);
 			data.BigHolePoint = Point(bigHolePoint);
 			data.ContactPoints = contractPointVector;
+			data.DistalCutFilePath = distalPath;
+			data.PosteriorCutFilePath = posteriorPath;
+			data.PosteriorChamferCutFilePath = posteriorChamferPath;
 
 			Prosthesis pros(number, data);
 			prosthesisList.push_back(pros);
@@ -3651,7 +3745,14 @@ void CzxTest::WriteTuoJsonBtnClicked()
 			std::string number = FileIO::getFileNameWithoutExtension(filePath.string());
 			std::string stlPath = number + ".STL";
 			data.stl = FileIO::CombinePath(FileIO::GetLastNParts(filePath.parent_path().string(), 4), stlPath).string();
+			std::string proximalPath = FileIO::CombinePath(dic, "ProximalCut.stl").string();
+			if (!std::filesystem::exists(proximalPath))
+			{
+				std::cout << "No " << proximalPath << std::endl;
+				return;
+			}
 
+			proximalPath = FileIO::CombinePath(FileIO::GetLastNParts(filePath.parent_path().string(), 4), "ProxiamlCut.stl").string();
 			std::regex re(R"(([-+]?\d*\.\d+|\d+)(?!.*\d))");
 			std::smatch match;
 			std::string lastNumber;
@@ -3662,6 +3763,8 @@ void CzxTest::WriteTuoJsonBtnClicked()
 			else {
 				std::cout << "Î´ÕÒµ½Êý×Ö¡£" << std::endl;
 			}
+
+			
 			data.OrientationFront = Point(orientationFront);
 			data.OrientationBack = Point(orientationBack);
 			data.thickness = lastNumber;
@@ -3669,7 +3772,7 @@ void CzxTest::WriteTuoJsonBtnClicked()
 			Eigen::Vector3d proximalCut = Eigen::Vector3d(0, 0, 0);
 			Eigen::Vector3d proximalCutNormal = Eigen::Vector3d(0, 0, -1);
 			data.ProximalCut = Cut(proximalCut, proximalCutNormal);
-
+			data.ProximalCutFilePath = proximalPath;
 			TibiaTray pros(number, data);
 			tibiaTrayList.push_back(pros);
 		}
@@ -3694,6 +3797,99 @@ void CzxTest::WriteTuoJsonBtnClicked()
 	else
 	{
 		std::cout << "cannot write json" << std::endl;
+	}
+}
+
+void CzxTest::GenerativeImplantSecurityBoundaryBtnClicked()
+{
+	QString filename = QFileDialog::getExistingDirectory(nullptr, "Select the Tools store folder", "");
+	if (filename.isNull()) return;
+
+	qDebug() << "The selected folder address :" << filename;
+	std::string directory = filename.toStdString();
+	std::filesystem::path fileNamePath = directory;
+	//std::string folderName = "ChunLi" + fileNamePath.parent_path().filename().string();
+	auto dictories = FileIO::GetListSubdirectories(directory);
+	std::vector<std::string> cutsName = { "DistalCut", "PosteriorChamferCut" ,"PosteriorCut" };
+	for (auto dic : dictories)
+	{
+		auto mitkFiles = FileIO::GetPathFilesWithFileType(dic, ".mitk");
+		for (auto file : mitkFiles)
+		{
+			std::cout << "mitk File Name" << file << std::endl;
+			auto filePath = FileIO::CombinePath(dic, file);
+			//std::filesystem::path textFilePath = CombinePath(dic, "Config.txt");
+			PKARenderHelper::RemoveAllNode(this->GetDataStorage());
+			LoadMITKFile(filePath.string());
+
+			//auto  = mitk:
+
+			for (auto cutName : cutsName)
+			{
+				auto node = this->GetDataStorage()->GetNamedNode(cutName);
+				if (!node)
+				{
+					std::cout << dic << "lack " << cutName << std::endl;
+					return;
+				}
+
+				auto savePath = FileIO::CombinePath(dic, cutName + ".stl");
+				std::cout << "savePath: " << savePath << std::endl;
+
+				FileIO::SaveDataNodeAsSTL(node, savePath.string());
+			}
+		}
+	}
+}
+
+void CzxTest::GenerativeTraySecurityBoundaryBtnClicked()
+{
+	QString filename = QFileDialog::getExistingDirectory(nullptr, "Select the Tools store folder", "");
+	if (filename.isNull()) return;
+
+	qDebug() << "The selected folder address :" << filename;
+	std::string directory = filename.toStdString();
+	std::filesystem::path fileNamePath = directory;
+	//std::string folderName = "ChunLi" + fileNamePath.parent_path().filename().string();
+	auto dictories = FileIO::GetListSubdirectories(directory);
+	//std::vector<std::string> cutsName = { "DistalCut", "PosteriorChamferCut" ,"PosteriorCut" };
+	
+	for (auto dic : dictories)
+	{
+		auto mitkFiles = FileIO::GetPathFilesWithFileType(dic, ".mitk");
+		for (auto file : mitkFiles)
+		{
+			std::cout << "mitk File Name" << file << std::endl;
+			auto filePath = FileIO::CombinePath(dic, file);
+			PKARenderHelper::RemoveAllNode(this->GetDataStorage());
+			LoadMITKFile(filePath.string());
+
+			std::filesystem::path cutName(file);
+			cutName = cutName.stem();
+			std::string cutNameStr = cutName.string();
+			std::string cutNameStr1 = cutNameStr.substr(0, cutNameStr.size()-3) + "-02";
+			std::string cutNameStr2 = cutNameStr.substr(0, cutNameStr.size() - 3) + "02";
+			auto node1 = this->GetDataStorage()->GetNamedNode(cutNameStr1);
+			auto node2 = this->GetDataStorage()->GetNamedNode(cutNameStr2);
+			if (!node1 && !node2)
+			{
+				std::cout << "cannot find cut!!!!!!!!!!" << std::endl;
+				std::cout << cutNameStr1 << std::endl;
+				std::cout << cutNameStr2 << std::endl;
+				return;
+			}
+
+			auto savePath = FileIO::CombinePath(dic, "ProximalCut.stl");
+			std::cout << "savePath: " << savePath << std::endl;
+			if (node1)
+			{
+				FileIO::SaveDataNodeAsSTL(node1, savePath.string());
+			}
+			else
+			{
+				FileIO::SaveDataNodeAsSTL(node2, savePath.string());
+			}
+		}
 	}
 }
 

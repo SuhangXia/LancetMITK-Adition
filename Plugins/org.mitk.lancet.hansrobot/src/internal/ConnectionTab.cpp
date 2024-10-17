@@ -4,6 +4,7 @@ ConnectionTab::ConnectionTab(Ui::HansRobotControls ui, mitk::DataStorage* aDataS
 {
 	m_ui = ui;
 	m_Robot = dynamic_cast<LancetJakaRobot*>( aRobot);
+
 	m_Camera = aCamera;
 	m_dataStorage = aDataStorage;
 	if (!m_dataStorage)

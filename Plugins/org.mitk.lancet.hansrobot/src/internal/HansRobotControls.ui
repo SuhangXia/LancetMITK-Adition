@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>702</width>
+    <width>1070</width>
     <height>868</height>
    </rect>
   </property>
@@ -23,7 +23,7 @@
    <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
-   <item row="0" column="0">
+   <item row="0" column="1">
     <widget class="QTabWidget" name="tabWidget_2">
      <property name="minimumSize">
       <size>
@@ -78,7 +78,7 @@ QTabBar QToolButton:hover {
 </string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab1_2">
       <attribute name="title">
@@ -481,10 +481,10 @@ QPushButton:pressed {
       <widget class="QPushButton" name="pushButton_AutoMoveJ_2">
        <property name="geometry">
         <rect>
-         <x>430</x>
-         <y>300</y>
-         <width>141</width>
-         <height>31</height>
+         <x>410</x>
+         <y>290</y>
+         <width>111</width>
+         <height>41</height>
         </rect>
        </property>
        <property name="text">
@@ -926,11 +926,37 @@ QPushButton:pressed {
       <widget class="QTextBrowser" name="textBrowser_hans">
        <property name="geometry">
         <rect>
-         <x>40</x>
-         <y>340</y>
+         <x>10</x>
+         <y>400</y>
          <width>651</width>
          <height>192</height>
         </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_AboslutePositionTest">
+       <property name="geometry">
+        <rect>
+         <x>630</x>
+         <y>290</y>
+         <width>111</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>走立方体</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_RepeatPositionTest">
+       <property name="geometry">
+        <rect>
+         <x>520</x>
+         <y>290</y>
+         <width>111</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>重复定位</string>
        </property>
       </widget>
      </widget>

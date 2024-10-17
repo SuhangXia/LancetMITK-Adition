@@ -1,10 +1,13 @@
 #include "IntraOsteotomy.h"
 
-lancetAlgorithm::IntraOsteotomy::IntraOsteotomy(mitk::DataStorage* dataStorage, PKADianaAimHardwareDevice* pkaDianaAimHardwareDevice)
+lancetAlgorithm::IntraOsteotomy::IntraOsteotomy(mitk::DataStorage* dataStorage, PKADianaAimHardwareDevice* pkaDianaAimHardwareDevice,
+	ChunLiXGImplant* aChunLiXGImplant, ChunLiTray* aChunLITray)
 {
 	m_DataStorage = dataStorage;
 	m_PKADianaAimHardwareDevice = pkaDianaAimHardwareDevice;
 	m_LastRoundMatrix = vtkSmartPointer<vtkMatrix4x4>::New();
+	m_ChunLiTray = aChunLITray;
+	m_ChunLiXGImplant = aChunLiXGImplant;
 }
 
 vtkSmartPointer<vtkMatrix4x4> lancetAlgorithm::IntraOsteotomy::CalculateTDrillEnd2FemurImage(/*Eigen::Vector3d pointInImage*/)
@@ -407,7 +410,7 @@ void lancetAlgorithm::IntraOsteotomy::SaveIntialNodePolyDataWithTransform(std::s
 	FileIO::WritePolyDataAsSTL(transformedPolyData, path);
 }
 
-void lancetAlgorithm::IntraOsteotomy::Drill()
+void lancetAlgorithm::IntraOsteotomy::Drill(CutPlane aCutPlane)
 {
 	if (!ValidateRequiredNodes("green", "buffer", "shell", "red", "DrillEndTip"))
 	{
@@ -468,6 +471,8 @@ void lancetAlgorithm::IntraOsteotomy::Drill()
 
 	clock_t end = clock();
 	std::cout << "Cutting time: " << end - start << std::endl;
+	IsDrillInSecurityBoundary(aCutPlane);
+	IsDrillInSecurityDepth(aCutPlane);
 }
 
 double lancetAlgorithm::IntraOsteotomy::GetDrillTip2FemurDrillPlaneDistance(Eigen::Vector3d planePoint, Eigen::Vector3d planeNormal, vtkMatrix4x4* TFemur2Tibia)
@@ -530,6 +535,135 @@ double lancetAlgorithm::IntraOsteotomy::GetDrillTip2TibiaDrillPlaneDistance(Eige
 	double distance = -CalculationHelper::DistanceFromPointToPlane(tipPosInTibiaImage, planeNormalInFemur, planePointInFemur);
 
 	return distance;
+}
+
+bool lancetAlgorithm::IntraOsteotomy::IsDrillInSecurityBoundary(CutPlane aCutPlane)
+{
+	Eigen::Vector3d planeNormal;
+	Eigen::Vector3d planePoint;
+	auto drillEndMatrix = m_DataStorage->GetNamedNode(PKAData::m_DrillEndTipNodeName.toStdString())
+		->GetData()->GetGeometry()->GetVtkMatrix()->GetData();;
+	Eigen::Vector3d drillPos(drillEndMatrix[3], drillEndMatrix[7], drillEndMatrix[11]);
+	auto securityBoundaryData = m_DataStorage->GetNamedNode("SecurityBoundary")->GetData();
+	auto cutPlanePolyData = dynamic_cast<mitk::Surface*>(m_DataStorage->GetNamedNode("SecurityBoundary")->GetData())->GetVtkPolyData();
+	vtkSmartPointer<vtkTransformPolyDataFilter> transFilter = vtkSmartPointer<vtkTransformPolyDataFilter>::New();
+	if (!cutPlanePolyData)
+	{
+		std::cout << "cutPlane is nullptr" << std::endl;
+		return false;
+	}
+	auto securityBoundaryMatrix = securityBoundaryData->GetGeometry()->GetVtkMatrix();
+	vtkSmartPointer<vtkTransform> trans = vtkSmartPointer<vtkTransform>::New();
+	trans->SetMatrix(securityBoundaryMatrix);
+	transFilter->SetInputData(cutPlanePolyData);
+	transFilter->SetTransform(trans);
+	transFilter->Update();
+	vtkSmartPointer<vtkPolyData> transformedPolyData = vtkSmartPointer<vtkPolyData>::New();
+	transformedPolyData->DeepCopy(transFilter->GetOutput());
+	vtkSmartPointer<vtkCellLocator> cellLocator = vtkSmartPointer<vtkCellLocator>::New();
+	cellLocator->SetDataSet(transformedPolyData);
+	cellLocator->BuildLocator();
+
+	switch (aCutPlane)
+	{
+	case lancetAlgorithm::CutPlane::DistalCut:
+	{
+		planePoint = m_ChunLiXGImplant->GetDistalCut();
+		planeNormal = planePoint - m_ChunLiXGImplant->GetDistalCutNormal();
+		break;
+	}
+	case lancetAlgorithm::CutPlane::PosteriorCut:
+	{
+		planePoint = m_ChunLiXGImplant->GetPosteriorCut();
+		planeNormal = planePoint - m_ChunLiXGImplant->GetPosteriorCutNormal();
+		break;
+	}
+	case lancetAlgorithm::CutPlane::PosteriorChamferCut:
+	{
+		planePoint = m_ChunLiXGImplant->GetPosteriorChamferCut();
+		planeNormal = planePoint - m_ChunLiXGImplant->GetPosteriorChamferCutNormal();
+		break;
+	}
+	case lancetAlgorithm::CutPlane::ProximalCut:
+	{
+		planePoint = m_ChunLiTray->GetProximal();
+		planeNormal = m_ChunLiTray->GetProximalDirection();
+		break;
+	}
+	default:
+		return false;
+	}
+	Eigen::Vector3d projectedPoint = CalculationHelper::ProjectPointOntoPlane(drillPos, planePoint, planeNormal);
+
+	PrintDataHelper::CoutArray(projectedPoint, "projectedPoint");
+
+	double closestPoint[3];  // 最近点
+	double dist2;             // 距离平方
+	vtkIdType cellId;         // 单元 ID
+	int subId;                // 子单元 ID
+	cellLocator->FindClosestPoint(projectedPoint.data(), closestPoint, cellId, subId, dist2);
+	const double epsilon = 1e-2;
+	if (dist2 < epsilon) {
+		std::cout <<std::setprecision(6) << "IsDrillInSecurityBoundary True dist2: "<< dist2 << std::endl;
+		PrintDataHelper::CoutArray(closestPoint, 3, "closestPoint");
+		return true;
+	}
+	else {
+		std::cout << std::setprecision(6) << "IsDrillInSecurityBoundary True dist2: " << dist2 << std::endl;
+		PrintDataHelper::CoutArray(closestPoint, 3, "closestPoint");
+		return false;
+	}
+}
+
+bool lancetAlgorithm::IntraOsteotomy::IsDrillInSecurityDepth(CutPlane aCutPlane)
+{
+	Eigen::Vector3d planeNormal;
+	Eigen::Vector3d planePoint;
+	auto drillEndMatrix = m_DataStorage->GetNamedNode(PKAData::m_DrillEndTipNodeName.toStdString())
+		->GetData()->GetGeometry()->GetVtkMatrix()->GetData();;
+	Eigen::Vector3d drillPos(drillEndMatrix[3], drillEndMatrix[7], drillEndMatrix[11]);
+	switch (aCutPlane)
+	{
+	case lancetAlgorithm::CutPlane::DistalCut:
+	{
+		planePoint = m_ChunLiXGImplant->GetDistalCut();
+		planeNormal = planePoint - m_ChunLiXGImplant->GetDistalCutNormal();
+		break;
+	}
+	case lancetAlgorithm::CutPlane::PosteriorCut:
+	{
+		planePoint = m_ChunLiXGImplant->GetPosteriorCut();
+		planeNormal = planePoint - m_ChunLiXGImplant->GetPosteriorCutNormal();
+		break;
+	}
+	case lancetAlgorithm::CutPlane::PosteriorChamferCut:
+	{
+		planePoint = m_ChunLiXGImplant->GetPosteriorChamferCut();
+		planeNormal = planePoint - m_ChunLiXGImplant->GetPosteriorChamferCutNormal();
+		break;
+	}
+	case lancetAlgorithm::CutPlane::ProximalCut:
+	{
+		planePoint = m_ChunLiTray->GetProximal();
+		planeNormal = m_ChunLiTray->GetProximalDirection();
+		break;
+	}
+	default:
+		return false;
+	}
+
+	double normalLength = planeNormal.norm();
+	double distance = CalculationHelper::DistanceFromPointToPlane(drillPos, planeNormal, planePoint);
+	if (distance < -1.0)
+	{
+		std::cout << "IsDrillInSecurityDepth FALSE: "<<distance << std::endl;
+		return false;
+	}
+	else
+	{
+		std::cout << "IsDrillInSecurityDepth TRUE: " << distance << std::endl;
+		return true;
+	}
 }
 
 void lancetAlgorithm::IntraOsteotomy::InitalOsteotomyModel(std::string drillEndName, std::string prosNodeName, std::string boneNodeName)
@@ -611,9 +745,15 @@ void lancetAlgorithm::IntraOsteotomy::InitalOsteotomyModel(std::string drillEndN
 		normals_->Update();
 		shellPolyData->DeepCopy(normals->GetOutput());
 		TurnMRMeshIntoPolyData(m_BufferMesh, bufferPolyData);
-
+		
+		PKARenderHelper::DisplaySingleNode(m_DataStorage, drillEndName);
 		auto redNode = PKARenderHelper::AddPolyData2DataStorage(m_DataStorage, "red", redPolyData, 1, 0, 0);
 		auto bufferNode = PKARenderHelper::AddPolyData2DataStorage(m_DataStorage, "buffer", bufferPolyData);
 		auto greenNode = PKARenderHelper::AddPolyData2DataStorage(m_DataStorage, "green", greenPolyData, 0, 1, 0);
 		auto shellNode = PKARenderHelper::AddPolyData2DataStorage(m_DataStorage, "shell", shellPolyData, 1, 1, 1, redNode);
+
+		greenNode->SetIntProperty("layer", 5);
+		bufferNode->SetIntProperty("layer", 4);
+		shellNode->SetIntProperty("layer", 3);
+		redNode->SetIntProperty("layer", 2);
 }

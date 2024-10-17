@@ -30,7 +30,7 @@ public:
 
 	virtual vtkSmartPointer<vtkMatrix4x4> GetToolMatrixByName(std::string aToolName) = 0;
 
-	virtual void InitToolsName(std::vector<std::string> aToolsName, std::vector<QLabel*>* aLabels = nullptr) = 0;
+	virtual void InitToolsName(std::vector<std::string> aToolsName) = 0;
 
 	void ResetTools()
 	{

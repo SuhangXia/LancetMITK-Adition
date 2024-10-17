@@ -1,0 +1,17 @@
+/**
+\page org_mitk_lancet_InstantiationCamera The InstantiationCamera
+
+\imageMacro{icon.png,"Icon of InstantiationCamera",2.00}
+
+\tableofcontents
+
+\section org_mitk_lancet_InstantiationCameraOverview Overview
+Describe the features of your awesome plugin here
+<ul>
+<li>Increases productivity
+<li>Creates beautiful images
+<li>Generates PhD thesis
+<li>Brings world peace
+</ul>
+
+*/

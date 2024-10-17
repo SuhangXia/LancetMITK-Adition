@@ -106,11 +106,75 @@ RobotArmRegistrationTab::RobotArmRegistrationTab(Ui::HansRobotControls ui, mitk:
 		});
 	connect(m_LancetRobotRegistration, &LancetRobotRegistration::countPose,
 		this, &RobotArmRegistrationTab::updateUiCaputreCount);
+
+	connect(m_ui.pushButton_RepeatPositionTest, &QPushButton::clicked, this, &RobotArmRegistrationTab::RepeatPositionTest);
+	connect(m_ui.pushButton_AboslutePositionTest, &QPushButton::clicked, this, &RobotArmRegistrationTab::AboslutePositionTest);
 }
 
 void RobotArmRegistrationTab::updateUiCaputreCount(int cnt)
 { 
 	m_ui.lineEdit_collectedRoboPose_2->setText(QString::number(cnt));
+}
+
+void RobotArmRegistrationTab::RepeatPositionTest()
+{
+	m_Robot->RecordInitialPos();
+	m_Robot->Translate(50, 0, 0);//xyz
+	m_Robot->GoToInitialPos();
+}
+
+void RobotArmRegistrationTab::AboslutePositionTest()
+{
+	// 立方体的边长，单位：mm
+	double cube_length = 300;
+
+	// 定义点的名称
+	const char* pointNames[] = { "a", "b", "c", "d", "e", "f", "g", "h" };
+
+	// 选择要移动到的点
+	switch (countNum)
+	{
+	case 0:
+		m_Robot->Translate(0, cube_length, 0);
+		std::cout << "Move a To b " << std::endl;
+		break;
+	case 1:
+		m_Robot->Translate(cube_length, 0, 0); // 移动到顶点 1
+		std::cout << "Move b To c " << std::endl;
+		break;
+	case 2:
+		m_Robot->Translate(0, -cube_length, 0); // 移动到顶点 2
+		std::cout << "Move c To d " << std::endl;
+		break;
+	case 3:
+		m_Robot->Translate(0, 0, cube_length); // 移动到顶点 3
+		std::cout << "Move d To H " << std::endl;
+		break;
+	case 4:
+		m_Robot->Translate(-cube_length, 0, 0); // 移动到顶点 4
+		std::cout << "Move H To E " << std::endl;
+		break;
+	case 5:
+		m_Robot->Translate(0, cube_length, 0); // 移动到顶点 5
+		std::cout << "Move E To F " << std::endl;
+		break;
+	case 6:
+		m_Robot->Translate(cube_length, 0, 0); // 移动到顶点 6
+		std::cout << "Move F To G " << std::endl;
+		break;
+	case 7:
+		// 移动到中心点
+		m_Robot->Translate(-cube_length / 2, -cube_length / 2, -cube_length / 2);
+		std::cout << "Move G To Center " << std::endl;
+		break;
+
+	default:
+		// 如果 countNum 超过 7，重置为 0
+		countNum = 0;
+		return;
+	}
+
+	countNum++; // 增加 countNum，准备下一次移动
 }
 
 
