@@ -5,13 +5,16 @@ LancetJakaRobot::LancetJakaRobot()
 {
 	m_InitialPos = vtkSmartPointer<vtkMatrix4x4>::New();
 	m_FlangeToTCP = vtkSmartPointer<vtkMatrix4x4>::New();
-	SetRobotIpAddress("192.168.2.1");
+	SetRobotIpAddress("10.5.5.100");
 	JAKAZuRobot m_Robot= JAKAZuRobot();
+	std::cout << "JAKA constrction function" << std::endl;
 }
 
 void LancetJakaRobot::Connect()
 {
-	CHECK_ERROR_AND_RETURN(m_Robot.login_in(m_IpAddress));
+	m_Robot.login_in(m_IpAddress);
+	std::cout << "JAKA Connect()" << std::endl;
+
 }
 
 void LancetJakaRobot::Disconnect()
@@ -32,7 +35,7 @@ void LancetJakaRobot::PowerOff()
 
 void LancetJakaRobot::Translate(double x, double y, double z)
 {
-	vtkSmartPointer<vtkMatrix4x4> matrix = vtkSmartPointer<vtkMatrix4x4>::New();
+	/*vtkSmartPointer<vtkMatrix4x4> matrix = vtkSmartPointer<vtkMatrix4x4>::New();
 	matrix->DeepCopy(GetBaseToTCP());
 	PrintDataHelper::CoutMatrix("baseToTcp", matrix);
 	auto euler = this->GetEulerByMatrix(matrix);
@@ -43,7 +46,15 @@ void LancetJakaRobot::Translate(double x, double y, double z)
 	matrix->SetElement(1, 3, matrix->GetElement(1, 3) + y);
 	matrix->SetElement(2, 3, matrix->GetElement(2, 3) + z);
 	RobotTransformInBase(matrix->GetData());
-	PrintDataHelper::CoutMatrix("baseToTcp2", matrix);
+	PrintDataHelper::CoutMatrix("baseToTcp2", matrix);*/
+	std::cout << "jaka Translate() Begin" << std::endl;
+	vtkSmartPointer<vtkMatrix4x4> matrix = vtkSmartPointer<vtkMatrix4x4>::New();
+	matrix->Identity();
+	matrix->SetElement(0, 3, x);
+	matrix->SetElement(1, 3, y);
+	matrix->SetElement(2, 3, z);
+	PrintDataHelper::CoutMatrix("jaka Translate", matrix);
+	RobotTransformInTCP(matrix->GetData());
 }
 
 void LancetJakaRobot::Translate(double* aDirection, double aLength)
@@ -171,6 +182,7 @@ vtkSmartPointer<vtkMatrix4x4> LancetJakaRobot::GetBaseToFlange()
 
 void LancetJakaRobot::RobotTransformInBase(double* aMatrix)
 {
+	std::cout << "jaka RobotTransformInBase() Begin" << std::endl;
 	vtkSmartPointer<vtkMatrix4x4> baseToTarget = vtkSmartPointer<vtkMatrix4x4>::New();
 	baseToTarget->DeepCopy(aMatrix);
 
@@ -181,15 +193,16 @@ void LancetJakaRobot::RobotTransformInBase(double* aMatrix)
 	PrintDataHelper::CoutArray(euler, "euler");
 	PrintDataHelper::CoutArray(translation, "translation");
 
+	std::cout << "jaka before CalculateInverse" << std::endl;
 	// 计算关节角度
 	auto joints = this->CalculateInverse(translation, euler);
-	PrintDataHelper::CoutVector(joints, "joints");
+	PrintDataHelper::CoutVector(joints, "jaka after culculate inverse joints");
 
-	auto tcpTranslation = this->GetTranslationPartByMatrix(this->GetFlangeToTCP());
-	auto tcpEuler = this->GetEulerByMatrix(this->GetFlangeToTCP());
+	//auto tcpTranslation = this->GetTranslationPartByMatrix(this->GetFlangeToTCP());
+	//auto tcpEuler = this->GetEulerByMatrix(this->GetFlangeToTCP());
 
-	PrintDataHelper::CoutArray(tcpTranslation, "tcpTranslation");
-	PrintDataHelper::CoutArray(tcpEuler, "tcpEuler");
+	//PrintDataHelper::CoutArray(tcpTranslation, "tcpTranslation");
+	//PrintDataHelper::CoutArray(tcpEuler, "tcpEuler");
 
 	// 设置运动模式和其他参数
 	MoveMode move_mode = ABS; // 运动模式（假设使用绝对运动）
@@ -201,18 +214,19 @@ void LancetJakaRobot::RobotTransformInBase(double* aMatrix)
 	{
 		joint_pos->jVal[i] = joints[i]; // 将计算得到的关节角度赋值给 joint_pos
 	}
-
+	std::cout << "jaka before m_Robot.joint_move" << std::endl;
 	// 调用 joint_move 函数
 	m_Robot.joint_move(joint_pos, move_mode, is_block, dJointVel, dJointAcc, dJointErr, nullptr);
-
+	std::cout << "jaka after m_Robot.joint_move" << std::endl;
 	// 清理内存
 	delete joint_pos;
+
 }
 
 
 void LancetJakaRobot::RobotTransformInTCP(double* aMatrix)
 {
-	auto baseToTCP = this->GetBaseToTCP();
+	/*auto baseToTCP = this->GetBaseToTCP();
 
 	vtkSmartPointer<vtkMatrix4x4> tcpToTarget = vtkSmartPointer<vtkMatrix4x4>::New();
 	tcpToTarget->DeepCopy(aMatrix);
@@ -221,7 +235,23 @@ void LancetJakaRobot::RobotTransformInTCP(double* aMatrix)
 
 	vtkMatrix4x4::Multiply4x4(baseToTCP, tcpToTarget, baseToTarget);
 
-	RobotTransformInBase(baseToTarget->GetData());
+	RobotTransformInBase(baseToTarget->GetData());*/
+	std: cout<< "jaka RobotTransformInTCP()" << std::endl;
+	double pose[6] = {};
+	vtkSmartPointer<vtkMatrix4x4> TBase2Tcp = vtkSmartPointer<vtkMatrix4x4>::New();
+	TBase2Tcp->DeepCopy(this->GetBaseToTCP());
+	PrintDataHelper::CoutMatrix("Current Base2TCP Matrix:", TBase2Tcp);
+	vtkSmartPointer<vtkTransform> transform = vtkSmartPointer<vtkTransform>::New();
+	transform->PreMultiply();
+	transform->SetMatrix(TBase2Tcp);
+	vtkSmartPointer<vtkMatrix4x4> vtkMatrix = vtkSmartPointer<vtkMatrix4x4>::New();
+
+	vtkMatrix->DeepCopy(aMatrix);
+	transform->Concatenate(vtkMatrix);
+
+	vtkSmartPointer<vtkMatrix4x4> newBase2TCP = vtkSmartPointer<vtkMatrix4x4>::New();
+	transform->GetMatrix(newBase2TCP);
+	this->RobotTransformInBase(newBase2TCP->GetData());
 }
 
 std::vector<double> LancetJakaRobot::GetCartStiffParams()
@@ -344,14 +374,15 @@ Eigen::Vector3d LancetJakaRobot::GetTranslationPartByMatrix(vtkMatrix4x4* m)
 
 std::vector<double> LancetJakaRobot::CalculateInverse(Eigen::Vector3d aTranslation, Eigen::Vector3d aEulerAngle)
 {
-	auto flange2TCP = this->GetFlangeToTCP();
+	std::cout << "CalculateInverse()Begin" << std::endl;
+	/*auto flange2TCP = this->GetFlangeToTCP();
 	auto tcpTranslation = this->GetTranslationPartByMatrix(flange2TCP);
 	auto flange2TCPEuler = this->GetEulerByMatrix(flange2TCP);
-	auto joints = this->GetJointAngles();
+	auto joints = this->GetJointAngles();*/
 	// 求逆解
 	JointValue* ref_pos=new JointValue();
 	m_Robot.get_joint_position(ref_pos);//读取当前关节位置，作为参考位置
-	CartesianPose* tcp_pos;
+	CartesianPose* tcp_pos=new CartesianPose();;
 	tcp_pos->tran.x = aTranslation[0];
 	tcp_pos->tran.y = aTranslation[1];
 	tcp_pos->tran.z = aTranslation[2];
@@ -359,11 +390,13 @@ std::vector<double> LancetJakaRobot::CalculateInverse(Eigen::Vector3d aTranslati
 	tcp_pos->rpy.ry = aEulerAngle[1];
 	tcp_pos->rpy.rz = aEulerAngle[2];
 	JointValue* joint_pos=new JointValue();
+	std::cout << "before m_Robot.kine_inverse(ref_pos, tcp_pos, joint_pos);" << std::endl;
 	m_Robot.kine_inverse(ref_pos, tcp_pos, joint_pos);
-
+	std::cout << "after m_Robot.kine_inverse(ref_pos, tcp_pos, joint_pos);" << std::endl;
 	std::vector<double> ret{ joint_pos->jVal[0], joint_pos->jVal[1], joint_pos->jVal[2], joint_pos->jVal[3], joint_pos->jVal[4], joint_pos->jVal[5] };
 	delete ref_pos;
 	delete joint_pos;
+	delete tcp_pos;
 	return ret;
 }
 

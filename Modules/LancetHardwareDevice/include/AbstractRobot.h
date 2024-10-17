@@ -70,7 +70,7 @@ public:
 
 protected:
 	//vtkSmartPointer<vtkMatrix4x4> m_InitialPos;
-	const char* m_IpAddress;
+	const char* m_IpAddress= "10.5.5.100";
 	std::vector<double> m_initJoints;
 };
 

@@ -23,19 +23,19 @@ RobotArmRegistrationTab::RobotArmRegistrationTab(Ui::HansRobotControls ui, mitk:
 
 	connect(m_ui.pushButton_xp_2, &QPushButton::clicked, this, [this]() {
 		m_LancetRobotRegistration->xp();
-		m_ui.textBrowser_hans->append(QString("SetTCPToFlange"));
+		m_ui.textBrowser_hans->append(QString("xp"));
 		});
 	connect(m_ui.pushButton_yp_2, &QPushButton::clicked, this, [this]() {
 		m_LancetRobotRegistration->yp();
-		m_ui.textBrowser_hans->append(QString("SetTCPToFlange"));
+		m_ui.textBrowser_hans->append(QString("yp"));
 		});
 	connect(m_ui.pushButton_zp_2, &QPushButton::clicked, this, [this]() {
 		m_LancetRobotRegistration->zp();
-		m_ui.textBrowser_hans->append(QString("SetTCPToFlange"));
+		m_ui.textBrowser_hans->append(QString("zp"));
 		});
 	connect(m_ui.pushButton_xm_2, &QPushButton::clicked, this, [this]() {
 		m_LancetRobotRegistration->xm();
-		m_ui.textBrowser_hans->append(QString("SetTCPToFlange"));
+		m_ui.textBrowser_hans->append(QString("xm"));
 		});
 	connect(m_ui.pushButton_ym_2, &QPushButton::clicked, this, [this]() {
 		m_LancetRobotRegistration->ym();
