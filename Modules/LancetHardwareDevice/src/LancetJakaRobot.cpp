@@ -226,7 +226,7 @@ void LancetJakaRobot::RobotTransformInBase(double* aMatrix)
 
 void LancetJakaRobot::RobotTransformInTCP(double* aMatrix)
 {
-	/*auto baseToTCP = this->GetBaseToTCP();
+	auto baseToTCP = this->GetBaseToTCP();
 
 	vtkSmartPointer<vtkMatrix4x4> tcpToTarget = vtkSmartPointer<vtkMatrix4x4>::New();
 	tcpToTarget->DeepCopy(aMatrix);
@@ -235,8 +235,8 @@ void LancetJakaRobot::RobotTransformInTCP(double* aMatrix)
 
 	vtkMatrix4x4::Multiply4x4(baseToTCP, tcpToTarget, baseToTarget);
 
-	RobotTransformInBase(baseToTarget->GetData());*/
-	std: cout<< "jaka RobotTransformInTCP()" << std::endl;
+	RobotTransformInBase(baseToTarget->GetData());
+	/*std: cout<< "jaka RobotTransformInTCP()" << std::endl;
 	double pose[6] = {};
 	vtkSmartPointer<vtkMatrix4x4> TBase2Tcp = vtkSmartPointer<vtkMatrix4x4>::New();
 	TBase2Tcp->DeepCopy(this->GetBaseToTCP());
@@ -251,7 +251,7 @@ void LancetJakaRobot::RobotTransformInTCP(double* aMatrix)
 
 	vtkSmartPointer<vtkMatrix4x4> newBase2TCP = vtkSmartPointer<vtkMatrix4x4>::New();
 	transform->GetMatrix(newBase2TCP);
-	this->RobotTransformInBase(newBase2TCP->GetData());
+	this->RobotTransformInBase(newBase2TCP->GetData());*/
 }
 
 std::vector<double> LancetJakaRobot::GetCartStiffParams()
