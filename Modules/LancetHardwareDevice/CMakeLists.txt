@@ -32,6 +32,14 @@ file(GLOB Jaka_LIB_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/JakaRobotDll/Release/*.l
 file(GLOB Jaka_DLL_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/JakaRobotDll/Release/*.dll")
 
 ######################################################################################
+set(Staubil_INCLUDE "")
+set(Staubil_LIB_RELEASE "")
+
+set(Staubil_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/StaubilDll/include")
+file(GLOB Staubi_LIB_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/StaubilDll/Release/*.lib")
+file(GLOB Staubi_DLLS_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/StaubilDll/Release/*.dll")
+
+######################################################################################
 set(ARIEMEDI_INCLUDE "")
 set(ARIEMEDI_LIB_RELEASE "")
 
@@ -48,15 +56,17 @@ mitk_create_module(
      PUBLIC ${Hans_INCLUDE}
      PUBLIC ${ARIEMEDI_INCLUDE}
      PUBLIC ${Jaka_INCLUDE}
+     PUBLIC ${Staubil_INCLUDE}
   DEPENDS PUBLIC MitkCore 
   DEPENDS MitkLancetPrintDataHelper
   PACKAGE_DEPENDS VTK OpenCV
-  PACKAGE_DEPENDS Qt5|Core+Widgets
+  PACKAGE_DEPENDS Qt5|Core+Widgets+Network
   ADDITIONAL_LIBS PUBLIC "${AIMOOE_LIB_RELEASE}"
   ADDITIONAL_LIBS PUBLIC "${Diana_LIB_RELEASE}"
   ADDITIONAL_LIBS PUBLIC "${Hans_LIB_RELEASE}"
   ADDITIONAL_LIBS PUBLIC "${ARIEMEDI_LIB_RELEASE}"
   ADDITIONAL_LIBS PUBLIC "${Jaka_LIB_RELEASE}"
+  ADDITIONAL_LIBS PUBLIC "${Staubi_LIB_RELEASE}"
 
    # Do not automatically create CppMicroServices initialization code.
   # Because the VTK "auto-init" functionality injects file-local static

@@ -3,6 +3,7 @@
 #include <robotapi_Staubli.h>
 class LancetStaubilRobot : public AbstractRobot
 {
+	// this robot is using angle not radius
 	virtual void Connect() override;
 	virtual void Disconnect() override;
 	virtual void PowerOn() override;
@@ -15,7 +16,7 @@ class LancetStaubilRobot : public AbstractRobot
 	virtual void RecordInitialPos() override;
 	virtual void GoToInitialPos() override;
 	virtual void SetTCPToFlange() override;
-	virtual bool SetTCP(vtkMatrix4x4* aMatrix) override;
+	virtual void SetTCP(vtkMatrix4x4* aMatrix, std::string TCP_NAME = "") override;
 
 	virtual std::vector<double> GetJointAngles() override;
 	virtual void SetJointAngles(std::vector<double> aJointAngles) override;

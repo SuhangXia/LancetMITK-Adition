@@ -56,18 +56,18 @@ void LancetStaubilRobot::GoToInitialPos()
 
 void LancetStaubilRobot::SetTCPToFlange()
 {
+
 }
 
-bool LancetStaubilRobot::SetTCP(vtkMatrix4x4* aMatrix)
+void LancetStaubilRobot::SetTCP(vtkMatrix4x4* aMatrix, std::string TCP_NAME)
 {
-	return false;
 }
 
 std::vector<double> LancetStaubilRobot::GetJointAngles()
 {
 	m_Robot.requestrealtimedata();
 	auto joints = m_Robot.realtime_data.joints;
-	
+	//m_Robot.realtime_data.
 	std::vector<double> ret = { joints.j1, joints.j2,joints.j3,joints.j4,joints.j5,joints.j6 };
 
 	return ret;
@@ -80,6 +80,10 @@ void LancetStaubilRobot::SetJointAngles(std::vector<double> aJointAngles)
 
 vtkSmartPointer<vtkMatrix4x4> LancetStaubilRobot::GetBaseToTCP()
 {
+	m_Robot.requestrealtimedata();
+	auto pose = m_Robot.realtime_data.pose;
+	Eigen::Vector3d trans(pose.x, pose.y, pose.z);
+	Eigen::Vector3d euler(pose.rx, pose.ry, pose.rz);
 
 	return vtkSmartPointer<vtkMatrix4x4>();
 }
@@ -109,6 +113,7 @@ void LancetStaubilRobot::RobotTransformInBase(double* aMatrix)
 
 void LancetStaubilRobot::RobotTransformInTCP(double* aMatrix)
 {
+	
 }
 
 std::vector<double> LancetStaubilRobot::GetCartDampParams()
