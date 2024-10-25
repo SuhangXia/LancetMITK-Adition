@@ -104,6 +104,7 @@ public slots:
 	void SetNodeVisibilityInRenderWindow(mitk::DataNode::Pointer node, const std::string& windowName, bool visibility);
 
 	void ApplyVisulize();
+	void OnApplyPresetVisulize();
 
 
 private:

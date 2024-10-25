@@ -96,7 +96,7 @@ void NeuroSurgery::InitSurfaceSelector(QmitkSingleNodeSelectionWidget* widget)
             mitk::NodePredicateProperty::New("hidden object")))));
 
     widget->SetSelectionIsOptional(true);
-    widget->SetAutoSelectNewNodes(true);
+    widget->SetAutoSelectNewNodes(false);
     widget->SetEmptyInfo(QString("Please select a surface"));
     widget->SetPopUpTitel(QString("Select surface"));
 }
@@ -111,7 +111,7 @@ void NeuroSurgery::InitPointSetSelector(QmitkSingleNodeSelectionWidget* widget)
             mitk::NodePredicateProperty::New("hidden object")))));
 
     widget->SetSelectionIsOptional(true);
-    widget->SetAutoSelectNewNodes(true);
+    widget->SetAutoSelectNewNodes(false);
     widget->SetEmptyInfo(QString("Please select a point set"));
     widget->SetPopUpTitel(QString("Select point set"));
 }
@@ -125,7 +125,7 @@ void NeuroSurgery::InitImageSelector(QmitkSingleNodeSelectionWidget* widget)
             mitk::NodePredicateProperty::New("hidden object")))));
 
     widget->SetSelectionIsOptional(true);
-    widget->SetAutoSelectNewNodes(true);
+    widget->SetAutoSelectNewNodes(false);
     widget->SetEmptyInfo(QString("Please select an image"));
     widget->SetPopUpTitel(QString("Select image"));
 }

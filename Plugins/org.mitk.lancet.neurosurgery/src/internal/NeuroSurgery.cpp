@@ -79,10 +79,8 @@ void NeuroSurgery::CreateQT_ImageProcess()
     * 3. Image Co-Visulizetion
     */
 
-    // Image Registration
+    // 1. Image Registration
     InitializeAlgorithmComboBox();
-
-
     connect(m_Controls.targetNodeSelector, &QmitkAbstractNodeSelectionWidget::CurrentSelectionChanged, this, &NeuroSurgery::OnNodeSelectionChanged);
     connect(m_Controls.movingNodeSelector, &QmitkAbstractNodeSelectionWidget::CurrentSelectionChanged, this, &NeuroSurgery::OnNodeSelectionChanged);
     connect(m_Controls.targetMaskNodeSelector, &QmitkAbstractNodeSelectionWidget::CurrentSelectionChanged, this, &NeuroSurgery::OnNodeSelectionChanged);
@@ -91,22 +89,13 @@ void NeuroSurgery::CreateQT_ImageProcess()
     // 2. Processed File Load and re - processing
     connect(m_Controls.pushButton_CheckProcessDataPath, &QPushButton::clicked, this, &NeuroSurgery::OnCheckProcessDataClicked);
     connect(m_Controls.pushButton_ProcessedDataLoad, &QPushButton::clicked, this, &NeuroSurgery::OnLoadDataButtonClicked);
-
     connect(m_Controls.pushButton_MaskToSeg, &QPushButton::clicked, this, &NeuroSurgery::OnMaskToSegmentClicked);
     connect(m_Controls.pushButton_SegToModel, &QPushButton::clicked, this, &NeuroSurgery::OnSegmentToModelClicked);
-
     connect(m_Controls.pushButton_Visulize, &QPushButton::clicked, this, &NeuroSurgery::OnVisualizeButtonClicked);
-
-    connect(m_Controls.pushButton_ApplyVisulize, &QPushButton::clicked, this, &NeuroSurgery::ApplyVisulize);
-
-
-
-
 
     // 3. Image Co-Visulizetion
     // data selection
     connect(m_Controls.pushButton_FindAlgorithm, &QPushButton::clicked, this, &NeuroSurgery::OnFindAlgorithmClicked);
-
     connect(m_Controls.pushButton_SelectAlgorithm, &QPushButton::clicked, this, &NeuroSurgery::OnAlgorithmSelectionChanged);
 
     // load Algorithm
@@ -122,11 +111,6 @@ void NeuroSurgery::CreateQT_ImageProcess()
     connect(m_Controls.pushButton_ResetGizmo, &QPushButton::clicked, this, &NeuroSurgery::ResetGizmo);
 
 
-
-
-
-
-    // 2. Image Co-Visulizetion
     // MRA
     InitImageSelector(m_Controls.mitkNodeSelectWidget_MRA);
     InitImageSelector(m_Controls.mitkNodeSelectWidget_MRA_Mask);
@@ -147,6 +131,10 @@ void NeuroSurgery::CreateQT_ImageProcess()
 
     // DTI
     connect(m_Controls.pushButton_FIBVisulizetion, &QPushButton::clicked, this, &NeuroSurgery::OnLoadFibFileClicked);
+
+    // show Image
+    connect(m_Controls.pushButton_ApplyVisulize, &QPushButton::clicked, this, &NeuroSurgery::ApplyVisulize);
+    connect(m_Controls.pushButton_showFusionImage, &QPushButton::clicked, this, &NeuroSurgery::OnApplyPresetVisulize);
 
 
 }
