@@ -46,7 +46,12 @@ public slots:
 	void OnCheckDataClicked();
 	void OnCheckPETMaskClicked();
 	void OnCheckPETColorfyClicked();
-	
+	virtual void OnSelectionChanged(berry::IWorkbenchPart::Pointer source,
+		const QList<mitk::DataNode::Pointer>& nodes) override;
+	void UseGizmoBtnClicked();
+	void ResetGizmo();
+
+
 	// Image Registration
 	void OnFindAlgorithmClicked();
 	void OnAlgorithmSelectionChanged();
@@ -56,7 +61,7 @@ public slots:
 	void OnNodeSelectionChanged(QList<mitk::DataNode::Pointer> /*nodes*/);
 
 	void OnRegResultIsAvailable(mitk::MAPRegistrationWrapper::Pointer spResultRegistration, const QmitkRegistrationJob* pRegJob);
-	
+
 	void OnFitMaskClicked();
 	void OnReconstructMRASurfaceClicked();
 	mitk::Image::Pointer ResampleMaskToImage(mitk::Image::Pointer maskImage, mitk::Image::Pointer referenceImage);
@@ -96,6 +101,10 @@ public slots:
 	void SetVisibilityForChildren(mitk::DataNode::Pointer parentNode, bool visibility);
 	void OnVisualizeButtonClicked();
 
+	void SetNodeVisibilityInRenderWindow(mitk::DataNode::Pointer node, const std::string& windowName, bool visibility);
+
+	void ApplyVisulize();
+
 
 private:
 	QWidget* m_Parent;
@@ -123,11 +132,15 @@ protected:
 	void InitPointSetSelector(QmitkSingleNodeSelectionWidget* widget);
 	void InitImageSelector(QmitkSingleNodeSelectionWidget* widget);
 
+	std::string current = "";
+	mitk::BaseData* m_baseDataToMove{ nullptr };
+	mitk::DataNode* m_currentSelectedNode{ nullptr };
+
 	// Image processing
 	int m_RegistrationType = 0;
 	mitk::DataNode::Pointer  m_MovingImageNode;
 	mitk::DataNode::Pointer  m_FixedImageNode;
-	
+
 	typedef map::algorithm::facet::IterativeAlgorithmInterface IIterativeAlgorithm;
 	typedef map::algorithm::facet::MultiResRegistrationAlgorithmInterface IMultiResAlgorithm;
 	typedef map::algorithm::facet::StoppableAlgorithmInterface IStoppableAlgorithm;
@@ -148,14 +161,14 @@ protected:
 	bool m_CanLoadAlgorithm;
 	bool m_ValidInputs;
 	bool m_Working;
-	
+
 	::map::deployment::DLLHandle::Pointer m_LoadedDLLHandle;
 	::map::deployment::DLLInfo::ConstPointer m_SelectedAlgorithmInfo;
 
 	// Registration
 	void PerformRigidRegistration(mitk::Image::Pointer movingImage, mitk::Image::Pointer fixedImage);
 	void PerformAffineRegistration(mitk::Image::Pointer movingImage, mitk::Image::Pointer fixedImage);
-	
+
 
 	berry::IBerryPreferences::Pointer RetrievePreferences();
 
@@ -173,6 +186,8 @@ protected:
 	void ConfigureNodeSelectors();
 
 	void Error(QString msg);
+
+	mitk::AffineTransform3D::Pointer m_OriginalTransform;
 
 	Ui::NeuroSurgeryControls m_Controls;
 };

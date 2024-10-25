@@ -44,6 +44,9 @@ All rights reserved.
 #include <mitkRenderingManager.h>
 #include <mitkLabelSetImage.h>
 #include <mitkImageToSurfaceFilter.h>
+#include <mitkIRenderWindowPart.h>
+#include <mitkBaseData.h>
+#include <QmitkRenderWindow.h>
 
 // VTK
 #include <vtkXMLPolyDataReader.h>
@@ -975,7 +978,7 @@ void NeuroSurgery::OnFitMaskClicked()
 }
 
 mitk::Image::Pointer NeuroSurgery::ResampleMaskToImage(mitk::Image::Pointer maskImage, mitk::Image::Pointer referenceImage)
-{   
+{
     /* Resample mask deminsion to its tied pic makes used for MaskFilterType */
     // MaskFilterType use for Masked operation
     // But same dememsion inputs are needed
@@ -1050,7 +1053,7 @@ void NeuroSurgery::OnMaskPETRegionClicked()
         node->SetName(PETMaskedName.toStdString().c_str());
 
         // 
-        node->SetOpacity(0.4); 
+        node->SetOpacity(0.4);
         GetDataStorage()->Add(node);
 
 
@@ -1395,7 +1398,7 @@ void NeuroSurgery::CreateSmoothedPolygonModel(mitk::DataNode::Pointer segmentati
 
         surfaceFilter->SetInput(labelImage);
         surfaceFilter->SetSmooth(true); // 启用平滑
-        
+
         // init param
         surfaceFilter->SetDecimate(mitk::ImageToSurfaceFilter::NoDecimation); // 不进行简化
         surfaceFilter->SetThreshold(threshold);
@@ -1548,4 +1551,85 @@ void NeuroSurgery::SetVisibilityForChildren(mitk::DataNode::Pointer parentNode, 
 
     // 更新渲染
     mitk::RenderingManager::GetInstance()->RequestUpdateAll();
+}
+
+void NeuroSurgery::ApplyVisulize()
+{
+    auto* iRenderWindowPart = this->GetRenderWindowPart();
+    QmitkRenderWindow* renderWindow_sagittal = iRenderWindowPart->GetQmitkRenderWindow("sagittal");
+    QmitkRenderWindow* renderWindow_axial = iRenderWindowPart->GetQmitkRenderWindow("axial");
+    QmitkRenderWindow* renderWindow_coronal = iRenderWindowPart->GetQmitkRenderWindow("coronal");
+    QmitkRenderWindow* renderWindow_3d = iRenderWindowPart->GetQmitkRenderWindow("3d");
+
+    // 获取所有的模态数据节点
+    std::map<std::string, mitk::DataNode::Pointer> modalityNodes = {
+        {"MRI", GetDataStorage()->GetNamedNode("MRI")},
+        {"PET", GetDataStorage()->GetNamedNode("PET")},
+        {"DTI", GetDataStorage()->GetNamedNode("DTI")},
+        {"Vessel", GetDataStorage()->GetNamedNode("Vessel")}
+    };
+
+    // 遍历每个模态
+    for (const auto& modality : modalityNodes)
+    {
+        const std::string& modalityName = modality.first;
+        mitk::DataNode::Pointer node = modality.second;
+
+        if (node)
+        {
+            // 获取模态的可视化复选框
+            QCheckBox* modalityCheckBox = m_Controls.groupBox_Visualization->findChild<QCheckBox*>(QString::fromStdString("checkBox_" + modalityName + "_Visulize"));
+            if (modalityCheckBox && modalityCheckBox->isChecked())
+            {
+                // 设置模态的可见性
+                node->SetVisibility(true);
+
+                // 获取各个视图的复选框
+                QCheckBox* axialCheckBox = m_Controls.groupBox_Visualization->findChild<QCheckBox*>(QString::fromStdString("checkBox_" + modalityName + "_Axial"));
+                QCheckBox* coronalCheckBox = m_Controls.groupBox_Visualization->findChild<QCheckBox*>(QString::fromStdString("checkBox_" + modalityName + "_Cor"));
+                QCheckBox* sagittalCheckBox = m_Controls.groupBox_Visualization->findChild<QCheckBox*>(QString::fromStdString("checkBox_" + modalityName + "_Sag"));
+                QCheckBox* view3DCheckBox = m_Controls.groupBox_Visualization->findChild<QCheckBox*>(QString::fromStdString("checkBox_" + modalityName + "_3D"));
+
+                // 使用原有代码逻辑设置各个视图的可见性
+                node->SetVisibility(sagittalCheckBox->isChecked(), renderWindow_sagittal->GetRenderer());
+                node->SetVisibility(axialCheckBox->isChecked(), renderWindow_axial->GetRenderer());
+                node->SetVisibility(coronalCheckBox->isChecked(), renderWindow_coronal->GetRenderer());
+                node->SetVisibility(view3DCheckBox->isChecked(), renderWindow_3d->GetRenderer());
+            }
+            else if (node == nullptr)
+            {
+
+            }
+            else
+            {
+                // 如果模态的可视化复选框未选中，则隐藏该模态
+                node->SetVisibility(false);
+            }
+        }
+    }
+
+    // 更新渲染
+    mitk::RenderingManager::GetInstance()->InitializeViewsByBoundingObjects(GetDataStorage());
+    mitk::RenderingManager::GetInstance()->RequestUpdateAll();
+
+}
+
+void NeuroSurgery::SetNodeVisibilityInRenderWindow(mitk::DataNode::Pointer node, const std::string& windowName, bool visibility)
+{
+    auto* iRenderWindowPart = this->GetRenderWindowPart();
+    if (!iRenderWindowPart)
+    {
+        std::cerr << "Render window part not available." << std::endl;
+        return;
+    }
+
+    QmitkRenderWindow* renderWindow = iRenderWindowPart->GetQmitkRenderWindow(windowName.c_str());
+    if (!renderWindow)
+    {
+        std::cerr << "Render window with name " << windowName << " not found." << std::endl;
+        return;
+    }
+
+    node->SetProperty("visible", mitk::BoolProperty::New(visibility), renderWindow->GetRenderer());
+    GetDataStorage()->Add(node);
 }

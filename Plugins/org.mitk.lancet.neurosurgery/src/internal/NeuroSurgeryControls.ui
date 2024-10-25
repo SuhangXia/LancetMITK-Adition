@@ -64,7 +64,7 @@
       </size>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -343,7 +343,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget_2">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab_8">
           <attribute name="title">
@@ -651,55 +651,99 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_15">
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout_14">
-                 <item>
-                  <widget class="QPushButton" name="pushButton_FindAlgorithm">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>30</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Find Algorithm in C++ system</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_21">
-                   <item>
-                    <widget class="QLabel" name="label_3">
-                     <property name="text">
-                      <string>Registration Algorithm Selection</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QComboBox" name="m_algorithmComboBox">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>30</height>
-                      </size>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_SelectAlgorithm">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>30</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Load Selected Algorithm</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                <widget class="QGroupBox" name="groupBox_9">
+                 <property name="title">
+                  <string>自动配准方案</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_24">
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_14">
+                    <item>
+                     <widget class="QPushButton" name="pushButton_FindAlgorithm">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Find Algorithm in C++ system</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_21">
+                      <item>
+                       <widget class="QLabel" name="label_3">
+                        <property name="text">
+                         <string>Registration Algorithm Selection</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="m_algorithmComboBox">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>30</height>
+                         </size>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_SelectAlgorithm">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Load Selected Algorithm</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="groupBox_8">
+                 <property name="title">
+                  <string>手动配准方案</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_20">
+                  <item>
+                   <widget class="QPushButton" name="pushButton_Gizmo">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>27</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>进行手动配准</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_ResetGizmo">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>27</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>撤销手动配准行为</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="m_pbLoadSelected">
@@ -1973,7 +2017,7 @@
           </attribute>
           <layout class="QGridLayout" name="gridLayout_3">
            <item row="0" column="0">
-            <widget class="QGroupBox" name="groupBox_9">
+            <widget class="QGroupBox" name="groupBox_Visualization">
              <property name="maximumSize">
               <size>
                <width>500</width>
@@ -1984,8 +2028,8 @@
               <string>视图展示图像</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_6">
-              <item row="1" column="3">
-               <widget class="QCheckBox" name="checkBox_38">
+              <item row="0" column="3">
+               <widget class="QCheckBox" name="checkBox_MRI_Cor">
                 <property name="text">
                  <string>Coronal</string>
                 </property>
@@ -1994,31 +2038,8 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="3">
-               <widget class="QCheckBox" name="checkBox_39">
-                <property name="text">
-                 <string>Coronal</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QCheckBox" name="checkBox_11">
-                <property name="text">
-                 <string>MRI</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="2">
-               <widget class="QCheckBox" name="checkBox_36">
+              <item row="1" column="2">
+               <widget class="QCheckBox" name="checkBox_PET_Sag">
                 <property name="text">
                  <string>Sagittal</string>
                 </property>
@@ -2027,8 +2048,8 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="QCheckBox" name="checkBox_32">
+              <item row="3" column="1">
+               <widget class="QCheckBox" name="checkBox_Vessel_Axial">
                 <property name="text">
                  <string>Axial</string>
                 </property>
@@ -2037,8 +2058,18 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="2">
-               <widget class="QCheckBox" name="checkBox_41">
+              <item row="3" column="3">
+               <widget class="QCheckBox" name="checkBox_Vessel_Cor">
+                <property name="text">
+                 <string>Coronal</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QCheckBox" name="checkBox_Vessel_Sag">
                 <property name="text">
                  <string>Sagittal</string>
                 </property>
@@ -2048,7 +2079,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QCheckBox" name="checkBox">
+               <widget class="QCheckBox" name="checkBox_MRI_Axial">
                 <property name="text">
                  <string>Axial</string>
                 </property>
@@ -2057,21 +2088,8 @@
                 </property>
                </widget>
               </item>
-              <item row="6" column="0" colspan="4">
-               <widget class="QPushButton" name="pushButton_unshow">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>27</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>隐藏</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QCheckBox" name="checkBox_35">
+              <item row="0" column="2">
+               <widget class="QCheckBox" name="checkBox_MRI_Sag">
                 <property name="text">
                  <string>Sagittal</string>
                 </property>
@@ -2080,18 +2098,18 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QCheckBox" name="checkBox_22">
+              <item row="3" column="0">
+               <widget class="QCheckBox" name="checkBox_Vessel_Visulize">
                 <property name="text">
-                 <string>DTI</string>
+                 <string>Vessel</string>
                 </property>
                 <property name="autoExclusive">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
-              <item row="2" column="3">
-               <widget class="QCheckBox" name="checkBox_42">
+              <item row="1" column="3">
+               <widget class="QCheckBox" name="checkBox_PET_Cor">
                 <property name="text">
                  <string>Coronal</string>
                 </property>
@@ -2100,18 +2118,8 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QCheckBox" name="checkBox_12">
-                <property name="text">
-                 <string>PET + CT</string>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QCheckBox" name="checkBox_2">
+              <item row="2" column="2">
+               <widget class="QCheckBox" name="checkBox_DTI_Sag">
                 <property name="text">
                  <string>Sagittal</string>
                 </property>
@@ -2120,7 +2128,123 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="0" colspan="4">
+              <item row="1" column="1">
+               <widget class="QCheckBox" name="checkBox_PET_Axial">
+                <property name="text">
+                 <string>Axial</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="checkBox_PET_Visulize">
+                <property name="text">
+                 <string>PET</string>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QCheckBox" name="checkBox_DTI_Axial">
+                <property name="text">
+                 <string>Axial</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="checkBox_MRI_Visulize">
+                <property name="text">
+                 <string>MRI</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QCheckBox" name="checkBox_DTI_Visulize">
+                <property name="text">
+                 <string>DTI</string>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="3">
+               <widget class="QCheckBox" name="checkBox_DTI_Cor">
+                <property name="text">
+                 <string>Coronal</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="4">
+               <widget class="QCheckBox" name="checkBox_MRI_3D">
+                <property name="text">
+                 <string>3D</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="4">
+               <widget class="QCheckBox" name="checkBox_PET_3D">
+                <property name="text">
+                 <string>3D</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="4">
+               <widget class="QCheckBox" name="checkBox_DTI_3D">
+                <property name="text">
+                 <string>3D</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="4">
+               <widget class="QCheckBox" name="checkBox_Vessel_3D">
+                <property name="text">
+                 <string>3D</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0" colspan="5">
+               <widget class="QPushButton" name="pushButton_ApplyVisulize">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>27</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>展示效果适用</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0" colspan="5">
                <widget class="QPushButton" name="pushButton_showFusionImage">
                 <property name="minimumSize">
                  <size>
@@ -2133,56 +2257,16 @@
                 </property>
                </widget>
               </item>
-              <item row="4" column="0" colspan="4">
-               <widget class="QPushButton" name="pushButton_5">
+              <item row="6" column="0" colspan="5">
+               <widget class="QPushButton" name="pushButton_unshow">
                 <property name="minimumSize">
                  <size>
-                  <width>100</width>
+                  <width>0</width>
                   <height>27</height>
                  </size>
                 </property>
                 <property name="text">
-                 <string>展示效果适用</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QCheckBox" name="checkBox_33">
-                <property name="text">
-                 <string>Axial</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QCheckBox" name="checkBox_14">
-                <property name="text">
-                 <string>Vessel</string>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QCheckBox" name="checkBox_40">
-                <property name="text">
-                 <string>Axial</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QCheckBox" name="checkBox_3">
-                <property name="text">
-                 <string>Coronal</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
+                 <string>隐藏</string>
                 </property>
                </widget>
               </item>

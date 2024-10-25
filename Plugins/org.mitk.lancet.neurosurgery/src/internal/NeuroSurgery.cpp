@@ -11,6 +11,7 @@ All rights reserved.
 #include <QmitkAbstractView.h>
 #include <mitkImage.h>
 #include <QmitkAbstractNodeSelectionWidget.h>
+#include <mitkIRenderWindowPart.h>
 
 
 
@@ -46,7 +47,7 @@ void NeuroSurgery::CreatQT_Basic()
     */
     // data load
     connect(m_Controls.checkBaseData_pushButton, &QPushButton::clicked, this, &NeuroSurgery::OnCheckDataClicked);
-    
+
     // Initialize selectors
     // Use AC-PC-HI to Set Pos of Brain 3d Scans
     InitImageSelector(m_Controls.mitk_MRI_Pic);
@@ -55,7 +56,7 @@ void NeuroSurgery::CreatQT_Basic()
     InitImageSelector(m_Controls.mitk_DTI_Pic);
     InitImageSelector(m_Controls.mitk_Vessel_Pic);
 
-    
+
 
 }
 
@@ -96,13 +97,16 @@ void NeuroSurgery::CreateQT_ImageProcess()
 
     connect(m_Controls.pushButton_Visulize, &QPushButton::clicked, this, &NeuroSurgery::OnVisualizeButtonClicked);
 
+    connect(m_Controls.pushButton_ApplyVisulize, &QPushButton::clicked, this, &NeuroSurgery::ApplyVisulize);
 
-   
-    
+
+
+
+
     // 3. Image Co-Visulizetion
     // data selection
     connect(m_Controls.pushButton_FindAlgorithm, &QPushButton::clicked, this, &NeuroSurgery::OnFindAlgorithmClicked);
-    
+
     connect(m_Controls.pushButton_SelectAlgorithm, &QPushButton::clicked, this, &NeuroSurgery::OnAlgorithmSelectionChanged);
 
     // load Algorithm
@@ -112,6 +116,12 @@ void NeuroSurgery::CreateQT_ImageProcess()
     connect(m_Controls.m_pbStartReg, SIGNAL(clicked()), this, SLOT(OnStartRegBtnPushed()));
     connect(m_Controls.m_pbStopReg, SIGNAL(clicked()), this, SLOT(OnStopRegBtnPushed()));
     connect(m_Controls.m_pbSaveLog, SIGNAL(clicked()), this, SLOT(OnSaveLogBtnPushed()));
+
+    // Gizmo
+    connect(m_Controls.pushButton_Gizmo, &QPushButton::clicked, this, &NeuroSurgery::UseGizmoBtnClicked);
+    connect(m_Controls.pushButton_ResetGizmo, &QPushButton::clicked, this, &NeuroSurgery::ResetGizmo);
+
+
 
 
 
