@@ -51,7 +51,7 @@
       </size>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Version Date: 2024.10.23&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Version Date: 2024.10.25&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
@@ -651,55 +651,99 @@
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_15">
                <item>
-                <layout class="QVBoxLayout" name="verticalLayout_14">
-                 <item>
-                  <widget class="QPushButton" name="pushButton_FindAlgorithm">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>30</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Find Algorithm in C++ system</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_21">
-                   <item>
-                    <widget class="QLabel" name="label_3">
-                     <property name="text">
-                      <string>Registration Algorithm Selection</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QComboBox" name="m_algorithmComboBox">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>30</height>
-                      </size>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_SelectAlgorithm">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>30</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Load Selected Algorithm</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                <widget class="QGroupBox" name="groupBox_9">
+                 <property name="title">
+                  <string>自动配准方案</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_24">
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_14">
+                    <item>
+                     <widget class="QPushButton" name="pushButton_FindAlgorithm">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Find Algorithm in C++ system</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_21">
+                      <item>
+                       <widget class="QLabel" name="label_3">
+                        <property name="text">
+                         <string>Registration Algorithm Selection</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="m_algorithmComboBox">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>30</height>
+                         </size>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_SelectAlgorithm">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>30</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>Load Selected Algorithm</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="groupBox_8">
+                 <property name="title">
+                  <string>手动配准方案</string>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_20">
+                  <item>
+                   <widget class="QPushButton" name="pushButton_Gizmo">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>27</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>进行手动配准</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_ResetGizmo">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>27</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>撤销手动配准行为</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
                </item>
                <item>
                 <widget class="QPushButton" name="m_pbLoadSelected">
@@ -1008,7 +1052,7 @@
            <item>
             <widget class="QTabWidget" name="tabWidget_4">
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="tab_12">
               <attribute name="title">
@@ -1360,83 +1404,363 @@
               <attribute name="title">
                <string>模型绑定</string>
               </attribute>
-              <widget class="QLabel" name="label_88">
+              <widget class="QGroupBox" name="groupBox_11">
                <property name="geometry">
                 <rect>
-                 <x>20</x>
+                 <x>10</x>
                  <y>10</y>
-                 <width>195</width>
-                 <height>13</height>
+                 <width>311</width>
+                 <height>411</height>
                 </rect>
                </property>
-               <property name="text">
-                <string>头部皮肤</string>
+               <property name="title">
+                <string>组织模型绑定/重命名</string>
                </property>
+               <layout class="QGridLayout" name="gridLayout">
+                <item row="0" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_33">
+                  <item>
+                   <widget class="QLabel" name="label_13">
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>头部皮肤:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QmitkSingleNodeSelectionWidget" name="mitk_MRI_Pic_2" native="true"/>
+                  </item>
+                 </layout>
+                </item>
+                <item row="4" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_35">
+                  <item>
+                   <widget class="QLabel" name="label_87">
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>脑膜</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QmitkSingleNodeSelectionWidget" name="mitk_MRI_Pic_5" native="true"/>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <item>
+                   <widget class="QLabel" name="label_85">
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>头部骨骼</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QmitkSingleNodeSelectionWidget" name="mitk_MRI_Pic_3" native="true"/>
+                  </item>
+                 </layout>
+                </item>
+                <item row="3" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_36">
+                  <item>
+                   <widget class="QLabel" name="label_91">
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>脑组织</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QmitkSingleNodeSelectionWidget" name="mitk_MRI_Pic_6" native="true"/>
+                  </item>
+                 </layout>
+                </item>
+                <item row="2" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_34">
+                  <item>
+                   <widget class="QLabel" name="label_90">
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>脑髓液</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QmitkSingleNodeSelectionWidget" name="mitk_MRI_Pic_4" native="true"/>
+                  </item>
+                 </layout>
+                </item>
+                <item row="5" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_37">
+                  <item>
+                   <widget class="QLabel" name="label_89">
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>脑区</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QmitkSingleNodeSelectionWidget" name="mitk_MRI_Pic_7" native="true"/>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
               </widget>
-              <widget class="QLabel" name="label_85">
+              <widget class="QWidget" name="">
                <property name="geometry">
                 <rect>
-                 <x>20</x>
-                 <y>57</y>
-                 <width>195</width>
-                 <height>13</height>
+                 <x>360</x>
+                 <y>40</y>
+                 <width>311</width>
+                 <height>281</height>
                 </rect>
                </property>
-               <property name="text">
-                <string>头部骨骼</string>
-               </property>
-              </widget>
-              <widget class="QLabel" name="label_90">
-               <property name="geometry">
-                <rect>
-                 <x>20</x>
-                 <y>104</y>
-                 <width>195</width>
-                 <height>13</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>脑髓液</string>
-               </property>
-              </widget>
-              <widget class="QLabel" name="label_91">
-               <property name="geometry">
-                <rect>
-                 <x>20</x>
-                 <y>198</y>
-                 <width>195</width>
-                 <height>13</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>脑组织</string>
-               </property>
-              </widget>
-              <widget class="QLabel" name="label_87">
-               <property name="geometry">
-                <rect>
-                 <x>20</x>
-                 <y>151</y>
-                 <width>195</width>
-                 <height>13</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>脑膜</string>
-               </property>
-              </widget>
-              <widget class="QLabel" name="label_89">
-               <property name="geometry">
-                <rect>
-                 <x>20</x>
-                 <y>245</y>
-                 <width>195</width>
-                 <height>13</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>脑区</string>
-               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_25">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_38">
+                  <item>
+                   <widget class="QLabel" name="label_6">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>头部皮肤</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="lineEdit">
+                    <property name="text">
+                     <string>Skin</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_39">
+                  <item>
+                   <widget class="QLabel" name="label_7">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>头部骨骼</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="lineEdit_2">
+                    <property name="text">
+                     <string>Skull</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_40">
+                  <item>
+                   <widget class="QLabel" name="label_8">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>脑髓液</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="lineEdit_3">
+                    <property name="text">
+                     <string>CSF</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_41">
+                  <item>
+                   <widget class="QLabel" name="label_18">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>脑组织</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="lineEdit_4">
+                    <property name="text">
+                     <string>Brain</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_42">
+                  <item>
+                   <widget class="QLabel" name="label_63">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>脑膜</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="lineEdit_5">
+                    <property name="text">
+                     <string>Meninges</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_43">
+                  <item>
+                   <widget class="QLabel" name="label_67">
+                    <property name="minimumSize">
+                     <size>
+                      <width>60</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>微软雅黑</family>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>脑区</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="lineEdit_6">
+                    <property name="text">
+                     <string>Regions</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>27</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>重命名</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </widget>
             </widget>
@@ -1973,7 +2297,7 @@
           </attribute>
           <layout class="QGridLayout" name="gridLayout_3">
            <item row="0" column="0">
-            <widget class="QGroupBox" name="groupBox_9">
+            <widget class="QGroupBox" name="groupBox_Visualization">
              <property name="maximumSize">
               <size>
                <width>500</width>
@@ -1984,8 +2308,8 @@
               <string>视图展示图像</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_6">
-              <item row="1" column="3">
-               <widget class="QCheckBox" name="checkBox_38">
+              <item row="0" column="3">
+               <widget class="QCheckBox" name="checkBox_MRI_Cor">
                 <property name="text">
                  <string>Coronal</string>
                 </property>
@@ -1994,31 +2318,8 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="3">
-               <widget class="QCheckBox" name="checkBox_39">
-                <property name="text">
-                 <string>Coronal</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QCheckBox" name="checkBox_11">
-                <property name="text">
-                 <string>MRI</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="2">
-               <widget class="QCheckBox" name="checkBox_36">
+              <item row="1" column="2">
+               <widget class="QCheckBox" name="checkBox_PET_Sag">
                 <property name="text">
                  <string>Sagittal</string>
                 </property>
@@ -2027,8 +2328,8 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
-               <widget class="QCheckBox" name="checkBox_32">
+              <item row="3" column="1">
+               <widget class="QCheckBox" name="checkBox_Vessel_Axial">
                 <property name="text">
                  <string>Axial</string>
                 </property>
@@ -2037,8 +2338,18 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="2">
-               <widget class="QCheckBox" name="checkBox_41">
+              <item row="3" column="3">
+               <widget class="QCheckBox" name="checkBox_Vessel_Cor">
+                <property name="text">
+                 <string>Coronal</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QCheckBox" name="checkBox_Vessel_Sag">
                 <property name="text">
                  <string>Sagittal</string>
                 </property>
@@ -2048,7 +2359,7 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QCheckBox" name="checkBox">
+               <widget class="QCheckBox" name="checkBox_MRI_Axial">
                 <property name="text">
                  <string>Axial</string>
                 </property>
@@ -2057,21 +2368,8 @@
                 </property>
                </widget>
               </item>
-              <item row="6" column="0" colspan="4">
-               <widget class="QPushButton" name="pushButton_unshow">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>27</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>隐藏</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QCheckBox" name="checkBox_35">
+              <item row="0" column="2">
+               <widget class="QCheckBox" name="checkBox_MRI_Sag">
                 <property name="text">
                  <string>Sagittal</string>
                 </property>
@@ -2080,18 +2378,18 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QCheckBox" name="checkBox_22">
+              <item row="3" column="0">
+               <widget class="QCheckBox" name="checkBox_Vessel_Visulize">
                 <property name="text">
-                 <string>DTI</string>
+                 <string>Vessel</string>
                 </property>
                 <property name="autoExclusive">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
-              <item row="2" column="3">
-               <widget class="QCheckBox" name="checkBox_42">
+              <item row="1" column="3">
+               <widget class="QCheckBox" name="checkBox_PET_Cor">
                 <property name="text">
                  <string>Coronal</string>
                 </property>
@@ -2100,18 +2398,8 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QCheckBox" name="checkBox_12">
-                <property name="text">
-                 <string>PET + CT</string>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QCheckBox" name="checkBox_2">
+              <item row="2" column="2">
+               <widget class="QCheckBox" name="checkBox_DTI_Sag">
                 <property name="text">
                  <string>Sagittal</string>
                 </property>
@@ -2120,21 +2408,111 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="0" colspan="4">
-               <widget class="QPushButton" name="pushButton_showFusionImage">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>27</height>
-                 </size>
-                </property>
+              <item row="1" column="1">
+               <widget class="QCheckBox" name="checkBox_PET_Axial">
                 <property name="text">
-                 <string>融合展示</string>
+                 <string>Axial</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
-              <item row="4" column="0" colspan="4">
-               <widget class="QPushButton" name="pushButton_5">
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="checkBox_PET_Visulize">
+                <property name="text">
+                 <string>PET</string>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QCheckBox" name="checkBox_DTI_Axial">
+                <property name="text">
+                 <string>Axial</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="checkBox_MRI_Visulize">
+                <property name="text">
+                 <string>MRI</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QCheckBox" name="checkBox_DTI_Visulize">
+                <property name="text">
+                 <string>DTI</string>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="3">
+               <widget class="QCheckBox" name="checkBox_DTI_Cor">
+                <property name="text">
+                 <string>Coronal</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="4">
+               <widget class="QCheckBox" name="checkBox_MRI_3D">
+                <property name="text">
+                 <string>3D</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="4">
+               <widget class="QCheckBox" name="checkBox_PET_3D">
+                <property name="text">
+                 <string>3D</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="4">
+               <widget class="QCheckBox" name="checkBox_DTI_3D">
+                <property name="text">
+                 <string>3D</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="4">
+               <widget class="QCheckBox" name="checkBox_Vessel_3D">
+                <property name="text">
+                 <string>3D</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0" colspan="5">
+               <widget class="QPushButton" name="pushButton_ApplyVisulize">
                 <property name="minimumSize">
                  <size>
                   <width>100</width>
@@ -2146,43 +2524,29 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="QCheckBox" name="checkBox_33">
-                <property name="text">
-                 <string>Axial</string>
+              <item row="5" column="0" colspan="5">
+               <widget class="QPushButton" name="pushButton_showFusionImage">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>27</height>
+                 </size>
                 </property>
-                <property name="checked">
-                 <bool>true</bool>
+                <property name="text">
+                 <string>融合展示【采用预设】</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
-               <widget class="QCheckBox" name="checkBox_14">
+              <item row="6" column="0" colspan="5">
+               <widget class="QPushButton" name="pushButton_unshow">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>27</height>
+                 </size>
+                </property>
                 <property name="text">
-                 <string>Vessel</string>
-                </property>
-                <property name="autoExclusive">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QCheckBox" name="checkBox_40">
-                <property name="text">
-                 <string>Axial</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QCheckBox" name="checkBox_3">
-                <property name="text">
-                 <string>Coronal</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
+                 <string>隐藏</string>
                 </property>
                </widget>
               </item>

@@ -55,6 +55,10 @@ void LancetHansRobot::SetBaseMotion()
 	ToolMotion = 0;
 	CHECK_ERROR_AND_RETURN(HRIF_SetToolMotion(boxID, rbtID, ToolMotion));
 }
+void LancetHansRobot::SetOverride(double PercentageofSpeed)
+{
+	CHECK_ERROR_AND_RETURN(HRIF_SetOverride(boxID, rbtID, PercentageofSpeed));
+}
 void LancetHansRobot::SetForceFreeDrive()
 {
 	CHECK_ERROR_AND_RETURN(HRIF_SetForceFreeDriveMode(boxID, rbtID, 1));

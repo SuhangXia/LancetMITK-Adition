@@ -44,6 +44,9 @@ All rights reserved.
 #include <mitkRenderingManager.h>
 #include <mitkLabelSetImage.h>
 #include <mitkImageToSurfaceFilter.h>
+#include <mitkIRenderWindowPart.h>
+#include <mitkBaseData.h>
+#include <QmitkRenderWindow.h>
 
 // VTK
 #include <vtkXMLPolyDataReader.h>
@@ -975,8 +978,10 @@ void NeuroSurgery::OnFitMaskClicked()
 }
 
 mitk::Image::Pointer NeuroSurgery::ResampleMaskToImage(mitk::Image::Pointer maskImage, mitk::Image::Pointer referenceImage)
-{   
-    /* Resample mask deminsion to its tied pic makes used for MaskFilterType */
+{
+    /* 
+    * Resample mask deminsion to its tied pic makes used for MaskFilterType
+    */
     // MaskFilterType use for Masked operation
     // But same dememsion inputs are needed
 
@@ -1050,7 +1055,7 @@ void NeuroSurgery::OnMaskPETRegionClicked()
         node->SetName(PETMaskedName.toStdString().c_str());
 
         // 
-        node->SetOpacity(0.4); 
+        node->SetOpacity(0.4);
         GetDataStorage()->Add(node);
 
 
@@ -1130,9 +1135,9 @@ void NeuroSurgery::OnPETResultVisualizeClicked()
 
 void NeuroSurgery::OnLoadFibFileClicked()
 {
-    /*  */
-    // Get the file path from lineEdit_FIBpath
-
+    /*
+    * Get the file path from lineEdit_FIBpath
+    */
     m_Controls.textBrowser_actionLOG->append("Action: Load Fib File.");
 
     QString filePath = m_Controls.lineEdit_FIBpath->text();
@@ -1282,15 +1287,18 @@ void NeuroSurgery::OnCheckProcessDataClicked() {
 
 void NeuroSurgery::OnLoadDataButtonClicked()
 {
+    /*
+    * Load Data To MITK
+    */
     m_Controls.textBrowser_actionLOG->append("Action: Load Data from Paths.");
 
-    // 获取每个数据路径
+    // Get path
     QString brainMaskPath = m_Controls.lineEdit_BrainMaskPath->text();
     QString brainLabelPath = m_Controls.lineEdit_BrainLabelPath->text();
     QString brainTissueLabelPath = m_Controls.lineEdit_BrainTissueLabelPath->text();
     QString brainRegionLabelPath = m_Controls.lineEdit_BrainRegionLabelPath->text();
 
-    // 加载每个数据
+    // Load Data
     LoadDataToMITK(brainMaskPath, "Brain Mask");
     LoadDataToMITK(brainLabelPath, "Head Label");
     LoadDataToMITK(brainTissueLabelPath, "Brain Tissue Label");
@@ -1325,6 +1333,9 @@ void NeuroSurgery::LoadDataToMITK(const QString& filePath, const QString& nodeNa
 
 void NeuroSurgery::ConvertToSegmentation(mitk::DataNode::Pointer imageNode)
 {
+    /*
+    * Convert Label data To Segment
+    */
     if (!imageNode)
     {
         m_Controls.textBrowser_actionLOG->append("Error: Invalid image node.");
@@ -1345,7 +1356,7 @@ void NeuroSurgery::ConvertToSegmentation(mitk::DataNode::Pointer imageNode)
     segmentationNode->SetData(segmentation);
     segmentationNode->SetName(imageNode->GetName() + "_Segmentation");
 
-    // 将分割节点添加为原始图像节点的子节点
+    // Add  as a child of the original node
     GetDataStorage()->Add(segmentationNode, imageNode);
 
     m_Controls.textBrowser_actionLOG->append("Converted to segmentation: " + QString::fromStdString(segmentationNode->GetName()));
@@ -1354,6 +1365,10 @@ void NeuroSurgery::ConvertToSegmentation(mitk::DataNode::Pointer imageNode)
 
 void NeuroSurgery::CreateSmoothedPolygonModel(mitk::DataNode::Pointer segmentationNode)
 {
+    /*
+    * Create Smoothed Polygon Model Based on Segmentation Label
+    * Create All Label Values Polygon Model
+    */
     if (!segmentationNode)
     {
         m_Controls.textBrowser_actionLOG->append("Error: Invalid segmentation node.");
@@ -1367,13 +1382,13 @@ void NeuroSurgery::CreateSmoothedPolygonModel(mitk::DataNode::Pointer segmentati
         return;
     }
 
-    // 从QLineEdit获取参数值
+    // Get QLineEdit parms
     double threshold = m_Controls.lineEdit_Smooth_Threshold->text().toDouble();
     double targetReduction = m_Controls.lineEdit_Smooth_TargetReduction->text().toDouble();
     int smoothIteration = m_Controls.lineEdit_Smooth_SmoothIteration->text().toInt();
     double smoothRelaxation = m_Controls.lineEdit_Smooth_SmoothRelaxation->text().toDouble();
 
-    // 遍历每个标签
+    // For all labels
     mitk::LabelSet::Pointer labelSet = segmentation->GetActiveLabelSet();
     for (auto it = labelSet->IteratorBegin(); it != labelSet->IteratorEnd(); ++it)
     {
@@ -1381,23 +1396,18 @@ void NeuroSurgery::CreateSmoothedPolygonModel(mitk::DataNode::Pointer segmentati
         if (label.IsNull())
             continue;
 
-        // 为每个标签创建一个单独的分割图像
+        // Create Label Mask
         mitk::Image::Pointer labelImage = segmentation->CreateLabelMask(label->GetValue());
 
-        // 使用ImageToSurfaceFilter来创建多边形模型
+        // ImageToSurfaceFilter
         mitk::ImageToSurfaceFilter::Pointer surfaceFilter = mitk::ImageToSurfaceFilter::New();
 
-        //    m_Decimate(NoDecimation),
-        //    m_Threshold(1.0),
-        //    m_TargetReduction(0.95f),
-        //    m_SmoothIteration(50),
-        //    m_SmoothRelaxation(0.1)
-
+        // Default Smooth
         surfaceFilter->SetInput(labelImage);
-        surfaceFilter->SetSmooth(true); // 启用平滑
-        
+        surfaceFilter->SetSmooth(true);
+
         // init param
-        surfaceFilter->SetDecimate(mitk::ImageToSurfaceFilter::NoDecimation); // 不进行简化
+        surfaceFilter->SetDecimate(mitk::ImageToSurfaceFilter::NoDecimation);
         surfaceFilter->SetThreshold(threshold);
         surfaceFilter->SetTargetReduction(targetReduction);
         surfaceFilter->SetSmoothIteration(smoothIteration);
@@ -1412,12 +1422,13 @@ void NeuroSurgery::CreateSmoothedPolygonModel(mitk::DataNode::Pointer segmentati
             surfaceNode->SetData(surface);
             surfaceNode->SetName(segmentationNode->GetName() + "_Surface_" + label->GetName());
         }
-        // 设置模型颜色
+        
+        // set properties
         mitk::Color color = label->GetColor();
         surfaceNode->SetColor(color.GetRed(), color.GetGreen(), color.GetBlue());
         surfaceNode->SetOpacity(0.6);
 
-        // 将表面节点添加为原始分割节点的子节点
+        // Add  as a child of the original node
         GetDataStorage()->Add(surfaceNode, segmentationNode);
         m_Controls.textBrowser_actionLOG->append("Created smoothed polygon model for label: " + QString::fromStdString(label->GetName()));
     }
@@ -1426,15 +1437,15 @@ void NeuroSurgery::CreateSmoothedPolygonModel(mitk::DataNode::Pointer segmentati
 
 void NeuroSurgery::OnMaskToSegmentClicked()
 {
+    /*
+    * Convert Mask data To Segment
+    */
     m_Controls.textBrowser_actionLOG->append("Action: Process Selected Data.");
 
-    // 获取数据节点
     mitk::DataNode::Pointer headNode = GetDataStorage()->GetNamedNode("Head Label");
     mitk::DataNode::Pointer brainNode = GetDataStorage()->GetNamedNode("Brain Tissue Label");
     mitk::DataNode::Pointer regionNode = GetDataStorage()->GetNamedNode("Brain Region Label");
 
-
-    // 根据复选框的选择处理数据
     if (m_Controls.checkBox_Process_Head->isChecked() && headNode)
     {
         m_Controls.textBrowser_actionLOG->append("Processing Head Data.");
@@ -1458,15 +1469,16 @@ void NeuroSurgery::OnMaskToSegmentClicked()
 
 void NeuroSurgery::OnSegmentToModelClicked()
 {
+    /*
+    * Convert Segment data To Model
+    */
     m_Controls.textBrowser_actionLOG->append("Action: Process Selected Data .");
 
-    // 获取数据节点
     mitk::DataNode::Pointer headNode = GetDataStorage()->GetNamedNode("Head Label_Segmentation");
     mitk::DataNode::Pointer brainNode = GetDataStorage()->GetNamedNode("Brain Tissue Label_Segmentation");
     mitk::DataNode::Pointer regionNode = GetDataStorage()->GetNamedNode("Brain Region Label_Segmentation");
 
 
-    // 根据复选框的选择处理数据
     if (m_Controls.checkBox_Process_Head->isChecked() && headNode)
     {
         m_Controls.textBrowser_actionLOG->append("Processing Head Data.");
@@ -1490,14 +1502,17 @@ void NeuroSurgery::OnSegmentToModelClicked()
 
 void NeuroSurgery::OnVisualizeButtonClicked()
 {
+    /*
+    * Selected DataNode Visualize
+    */
     m_Controls.textBrowser_actionLOG->append("Action: Visualize Processed Data.");
 
-    // 获取数据节点
+    // Get Basis data
     mitk::DataNode::Pointer headNode = GetDataStorage()->GetNamedNode("Head Label_Segmentation");
     mitk::DataNode::Pointer brainNode = GetDataStorage()->GetNamedNode("Brain Tissue Label_Segmentation");
     mitk::DataNode::Pointer regionNode = GetDataStorage()->GetNamedNode("Brain Region Label_Segmentation");
 
-    // 根据复选框的选择设置可见性
+    // Set visibility according to the selection of the check box
     if (m_Controls.checkBox_Process_Head->isChecked() && headNode)
     {
         bool visible = headNode->IsVisible(nullptr, "visible", true);
@@ -1522,30 +1537,204 @@ void NeuroSurgery::OnVisualizeButtonClicked()
         m_Controls.textBrowser_actionLOG->append("Region data " + QString(visible ? "shown." : "hidden."));
     }
 
-    // 更新渲染
+    // Refresh
     mitk::RenderingManager::GetInstance()->RequestUpdateAll();
 }
 
 void NeuroSurgery::SetVisibilityForChildren(mitk::DataNode::Pointer parentNode, bool visibility)
 {
+    /*
+    * When setting visibility, apply it to children nodes
+    * Also, the Visibility for Different Window
+    */
     if (!parentNode)
     {
         m_Controls.textBrowser_actionLOG->append("Error: Invalid parent node.");
         return;
     }
 
-    // 获取所有子节点
+    // Retrieve all child nodes
     mitk::DataStorage::SetOfObjects::ConstPointer children = GetDataStorage()->GetDerivations(parentNode);
+
+    // Get the current render windows
+    auto* iRenderWindowPart = this->GetRenderWindowPart();
+    if (!iRenderWindowPart)
+    {
+        m_Controls.textBrowser_actionLOG->append("Error: Render window part not available.");
+        return;
+    }
+
+    QmitkRenderWindow* renderWindow_sagittal = iRenderWindowPart->GetQmitkRenderWindow("sagittal");
+    QmitkRenderWindow* renderWindow_axial = iRenderWindowPart->GetQmitkRenderWindow("axial");
+    QmitkRenderWindow* renderWindow_coronal = iRenderWindowPart->GetQmitkRenderWindow("coronal");
+    QmitkRenderWindow* renderWindow_3d = iRenderWindowPart->GetQmitkRenderWindow("3d");
+
+    // Get the visibility of the parent node in each view
+    bool sagittalVisibility = parentNode->IsVisible(renderWindow_sagittal->GetRenderer());
+    bool axialVisibility = parentNode->IsVisible(renderWindow_axial->GetRenderer());
+    bool coronalVisibility = parentNode->IsVisible(renderWindow_coronal->GetRenderer());
+    bool view3DVisibility = parentNode->IsVisible(renderWindow_3d->GetRenderer());
 
     for (auto it = children->Begin(); it != children->End(); ++it)
     {
         mitk::DataNode::Pointer childNode = it->Value();
         if (childNode.IsNotNull())
         {
+            // Set the visibility of the child node
             childNode->SetVisibility(visibility);
+
+            // Set the visibility of the child node in each view
+            childNode->SetVisibility(sagittalVisibility, renderWindow_sagittal->GetRenderer());
+            childNode->SetVisibility(axialVisibility, renderWindow_axial->GetRenderer());
+            childNode->SetVisibility(coronalVisibility, renderWindow_coronal->GetRenderer());
+            childNode->SetVisibility(view3DVisibility, renderWindow_3d->GetRenderer());
         }
     }
 
-    // 更新渲染
+    // Update rendering
     mitk::RenderingManager::GetInstance()->RequestUpdateAll();
+}
+
+void NeuroSurgery::ApplyVisulize()
+{
+    /* 
+    * Apply Visulize State, Different Modality are selectively displayed
+    */
+    m_Controls.textBrowser_actionLOG->append("Action: Apply Current Visualize Params.");
+
+    auto* iRenderWindowPart = this->GetRenderWindowPart();
+    QmitkRenderWindow* renderWindow_sagittal = iRenderWindowPart->GetQmitkRenderWindow("sagittal");
+    QmitkRenderWindow* renderWindow_axial = iRenderWindowPart->GetQmitkRenderWindow("axial");
+    QmitkRenderWindow* renderWindow_coronal = iRenderWindowPart->GetQmitkRenderWindow("coronal");
+    QmitkRenderWindow* renderWindow_3d = iRenderWindowPart->GetQmitkRenderWindow("3d");
+
+    // Get data
+    std::map<std::string, mitk::DataNode::Pointer> modalityNodes = {
+        {"MRI", GetDataStorage()->GetNamedNode("MRI")},
+        {"PET", GetDataStorage()->GetNamedNode("PET")},
+        {"DTI", GetDataStorage()->GetNamedNode("DTI")},
+        {"Vessel", GetDataStorage()->GetNamedNode("Vessel")}
+    };
+
+    // reverse all Modality
+    for (const auto& modality : modalityNodes)
+    {
+        const std::string& modalityName = modality.first;
+        mitk::DataNode::Pointer node = modality.second;
+
+        if (node)
+        {
+            // get Modality selected state
+            QCheckBox* modalityCheckBox = m_Controls.groupBox_Visualization->findChild<QCheckBox*>(QString::fromStdString("checkBox_" + modalityName + "_Visulize"));
+            if (modalityCheckBox && modalityCheckBox->isChecked())
+            {
+                // visulize Modality when selected
+                node->SetVisibility(true);
+
+                // get checkbox state
+                QCheckBox* axialCheckBox = m_Controls.groupBox_Visualization->findChild<QCheckBox*>(QString::fromStdString("checkBox_" + modalityName + "_Axial"));
+                QCheckBox* coronalCheckBox = m_Controls.groupBox_Visualization->findChild<QCheckBox*>(QString::fromStdString("checkBox_" + modalityName + "_Cor"));
+                QCheckBox* sagittalCheckBox = m_Controls.groupBox_Visualization->findChild<QCheckBox*>(QString::fromStdString("checkBox_" + modalityName + "_Sag"));
+                QCheckBox* view3DCheckBox = m_Controls.groupBox_Visualization->findChild<QCheckBox*>(QString::fromStdString("checkBox_" + modalityName + "_3D"));
+
+                // set visulize funcs
+                node->SetVisibility(sagittalCheckBox->isChecked(), renderWindow_sagittal->GetRenderer());
+                node->SetVisibility(axialCheckBox->isChecked(), renderWindow_axial->GetRenderer());
+                node->SetVisibility(coronalCheckBox->isChecked(), renderWindow_coronal->GetRenderer());
+                node->SetVisibility(view3DCheckBox->isChecked(), renderWindow_3d->GetRenderer());
+            }
+            else if (node == nullptr)
+            {
+                // for node that does not exists in DataStorage, do nothing
+            }
+            else
+            {
+                // unvisulize Modality when not selected
+                node->SetVisibility(false);
+            }
+        }
+    }
+
+    // Refresh
+    mitk::RenderingManager::GetInstance()->InitializeViewsByBoundingObjects(GetDataStorage());
+    mitk::RenderingManager::GetInstance()->RequestUpdateAll();
+
+}
+
+void NeuroSurgery::SetNodeVisibilityInRenderWindow(mitk::DataNode::Pointer node, const std::string& windowName, bool visibility)
+{
+    /*
+    * Uesd for Change Window Display State
+    * Not for Used
+    */
+    auto* iRenderWindowPart = this->GetRenderWindowPart();
+    if (!iRenderWindowPart)
+    {
+        std::cerr << "Render window part not available." << std::endl;
+        return;
+    }
+
+    QmitkRenderWindow* renderWindow = iRenderWindowPart->GetQmitkRenderWindow(windowName.c_str());
+    if (!renderWindow)
+    {
+        std::cerr << "Render window with name " << windowName << " not found." << std::endl;
+        return;
+    }
+
+    node->SetProperty("visible", mitk::BoolProperty::New(visibility), renderWindow->GetRenderer());
+    GetDataStorage()->Add(node);
+}
+
+
+void NeuroSurgery::OnApplyPresetVisulize()
+{
+    /*
+    * Apply Preset Visulize State, Different Modality are selectively displayed
+    * Apply the Best Display Param
+    */
+    m_Controls.textBrowser_actionLOG->append("Action: Apply Preset Visualize Params.");
+
+    // prams init
+    struct VisualizationPreset {
+        bool mriVisible, mriAxial, mriCoronal, mriSagittal, mri3D;
+        bool petVisible, petAxial, petCoronal, petSagittal, pet3D;
+        bool dtiVisible, dtiAxial, dtiCoronal, dtiSagittal, dti3D;
+        bool vesselVisible, vesselAxial, vesselCoronal, vesselSagittal, vessel3D;
+    };
+
+    // prams preset
+    VisualizationPreset preset = {
+        true, true, true, true, true,  // MRI
+        true, true, true, true, false, // PET
+        true, true, true, true, true,  // DTI
+        true, true, true, true, true   // Vessel
+    };
+
+    // change checkbox
+    m_Controls.checkBox_MRI_Visulize->setChecked(preset.mriVisible);
+    m_Controls.checkBox_MRI_Axial->setChecked(preset.mriAxial);
+    m_Controls.checkBox_MRI_Cor->setChecked(preset.mriCoronal);
+    m_Controls.checkBox_MRI_Sag->setChecked(preset.mriSagittal);
+    m_Controls.checkBox_MRI_3D->setChecked(preset.mri3D);
+
+    m_Controls.checkBox_PET_Visulize->setChecked(preset.petVisible);
+    m_Controls.checkBox_PET_Axial->setChecked(preset.petAxial);
+    m_Controls.checkBox_PET_Cor->setChecked(preset.petCoronal);
+    m_Controls.checkBox_PET_Sag->setChecked(preset.petSagittal);
+    m_Controls.checkBox_PET_3D->setChecked(preset.pet3D);
+
+    m_Controls.checkBox_DTI_Visulize->setChecked(preset.dtiVisible);
+    m_Controls.checkBox_DTI_Axial->setChecked(preset.dtiAxial);
+    m_Controls.checkBox_DTI_Cor->setChecked(preset.dtiCoronal);
+    m_Controls.checkBox_DTI_Sag->setChecked(preset.dtiSagittal);
+    m_Controls.checkBox_DTI_3D->setChecked(preset.dti3D);
+
+    m_Controls.checkBox_Vessel_Visulize->setChecked(preset.vesselVisible);
+    m_Controls.checkBox_Vessel_Axial->setChecked(preset.vesselAxial);
+    m_Controls.checkBox_Vessel_Cor->setChecked(preset.vesselCoronal);
+    m_Controls.checkBox_Vessel_Sag->setChecked(preset.vesselSagittal);
+    m_Controls.checkBox_Vessel_3D->setChecked(preset.vessel3D);
+
+    // apply
+    ApplyVisulize();
 }

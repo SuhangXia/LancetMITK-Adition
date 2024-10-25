@@ -32,6 +32,7 @@ public:
 	void SetBaseMotion() ;
 	void SetForceFreeDrive() ;
 	void StopForceFreeDrive() ;
+	void SetOverride(double PercentageofSpeed);
 
 	void Translate(double x, double y, double z) override;
 
