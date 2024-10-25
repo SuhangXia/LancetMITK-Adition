@@ -16,6 +16,7 @@ void CameraConnectionTab::InitConnection()
 	connect(m_UI.CameraDisconnectBtn, &QPushButton::clicked, this, &CameraConnectionTab::CameraDisconnectBtnClicked);
 	connect(m_UI.CameraStartBtn, &QPushButton::clicked, this, &CameraConnectionTab::CameraStartBtnClicked);
 	connect(m_UI.DrawRectBtn, &QPushButton::clicked, this, &CameraConnectionTab::DrawRectBtnClicked);
+	connect(m_UI.GeneratePointCloudBtn, &QPushButton::clicked, this, &CameraConnectionTab::GeneratePointCloudBtnClicked);
 
 	connect(m_Camera, &AriemediCamera::CameraUpdateClock, this, &CameraConnectionTab::UpdateUIDisplay);
 	connect(m_Camera, &AriemediCamera::ImageUpdateClock, this, &CameraConnectionTab::UpdateUIImages);
@@ -28,16 +29,16 @@ void CameraConnectionTab::CameraConnectBtnClicked()
 
 void CameraConnectionTab::CameraDisconnectBtnClicked()
 {
-	m_Camera->Disconnect();
+	m_Camera->Stop();
 }
 
 void CameraConnectionTab::CameraStartBtnClicked()
 {
 	std::vector<std::string> toolsName = { "PKADrill" };
 	m_Camera->InitToolsName(toolsName);
+	
 	m_Camera->Start();
 	auto imageSize = m_Camera->GetImageSize();
-
 	m_Camera->SetAreaDisplay(10, 20, 10, 20, 500, 500);
 	std::cout << "m_ImageWidth: " << m_ImageWidth << std::endl;
 	std::cout << "m_ImageHeight: " << m_ImageHeight << std::endl;
@@ -46,6 +47,17 @@ void CameraConnectionTab::CameraStartBtnClicked()
 void CameraConnectionTab::DrawRectBtnClicked()
 {
 	m_CameraRectLabel->StartDraw();
+}
+
+void CameraConnectionTab::GeneratePointCloudBtnClicked()
+{
+	auto node =  m_Camera->GetPointCloud();
+	if (!node)
+	{
+		std::cout << "GetPointCloud is nullptr" << std::endl;
+		return;
+	}
+	m_DataStorage->Add(node);
 }
 
 void CameraConnectionTab::UpdateUIDisplay()

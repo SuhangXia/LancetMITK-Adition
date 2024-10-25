@@ -27,6 +27,7 @@ void CameraTransTab::ConverRomFileBtnClicked()
 		auto romfile = FileIO::CombinePath(filename.toStdString(), file);
 		
 		std::cout << file << std::endl;
+		
 	}
 }
 

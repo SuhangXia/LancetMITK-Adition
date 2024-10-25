@@ -24,6 +24,8 @@ public:
 
 	void DrawRectBtnClicked();
 
+	void GeneratePointCloudBtnClicked();
+
 private slots:
 	void UpdateUIDisplay();
 

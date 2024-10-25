@@ -1,6 +1,6 @@
 #include "AriemediCamera.h"
 
-AriemediCamera::AriemediCamera(): m_ImageUpdateTimer(new QTimer())
+AriemediCamera::AriemediCamera() : m_ImageUpdateTimer(new QTimer())
 {
 	m_Tracker = new ARMDCombinedAPI();
 }
@@ -8,7 +8,7 @@ AriemediCamera::AriemediCamera(): m_ImageUpdateTimer(new QTimer())
 AriemediCamera::~AriemediCamera()
 {
 	m_IsStart = false;
-	Stop();
+	//Stop();
 	Disconnect();
 }
 
@@ -71,7 +71,7 @@ void AriemediCamera::Start()
 	//QtConcurrent::run([this] { StartUpdateThread(); });
 	//connect(m_ImageUpdateTimer, &QTimer::timeout, this, &AriemediCamera::RequestUpdateImage);
 	connect(m_CameraUpdateTimer, &QTimer::timeout, this, &AriemediCamera::RequestUpdateTracking);
-	
+
 	//m_ImageUpdateTimer->start(5);
 	m_CameraUpdateTimer->start(100);
 	m_IsStart = true;
@@ -95,11 +95,12 @@ void AriemediCamera::Stop()
 	{
 		// 停止定时器
 		m_CameraUpdateTimer->stop();
-		m_ImageUpdateTimer->stop();
+		//m_ImageUpdateTimer->stop();
 		// 断开定时器的信号连接
-		disconnect(m_CameraUpdateTimer, &QTimer::timeout, this, &AriemediCamera::UpdateData);
-		disconnect(m_ImageUpdateTimer, &QTimer::timeout, this, &AriemediCamera::RequestUpdateImage);
+		disconnect(m_CameraUpdateTimer, &QTimer::timeout, this, &AriemediCamera::RequestUpdateTracking);
+		//disconnect(m_ImageUpdateTimer, &QTimer::timeout, this, &AriemediCamera::RequestUpdateImage);
 	}
+	m_IsStart = false;
 }
 
 Eigen::Vector3d AriemediCamera::GetToolTipByName(std::string aToolName)
@@ -134,6 +135,19 @@ void AriemediCamera::run()
 	{
 		UpdateData();
 		UpdateImageData();
+		//m_Tracker->trackingUpdate();
+
+		//		if (m_Tracker->getReconstructionStatus() == TransmissionStatus::ReconstructionReady)
+		//{
+		//	ReconstructPointCloud Reconstructor = ReconstructPointCloud(m_Tracker->getReconstructParameters());
+		//	Reconstructor.setReconstructData(m_Tracker->getReconstructionData());
+		//	m_PointCloud = Reconstructor.getPointCloud();
+		//
+		//	//return GetCameraPointCloudDataNode(pc);
+		//}
+
+		//std::cout << m_Tracker->getReconstructionStatus() << std::endl;
+
 	}
 }
 
@@ -159,7 +173,7 @@ void AriemediCamera::UpdateImageData()
 
 	memcpy(m_LeftImage.get(), m_Tracker->getLeftImagingData(), imageSize.at(0) * imageSize.at(1) * sizeof(char));
 	memcpy(m_RightImage.get(), m_Tracker->getRightImagingData(), imageSize.at(0) * imageSize.at(1) * sizeof(char));
-	
+
 	emit ImageUpdateClock(m_LeftImage.get(), m_RightImage.get(), imageSize.at(0), imageSize.at(1));
 }
 
@@ -183,7 +197,7 @@ std::pair<double, double> AriemediCamera::GetImageSize()
 {
 	if (ConnectionStatus::Interruption == m_Tracker->getConnectionStatus())
 	{
-		return std::pair(0,0);
+		return std::pair(0, 0);
 	}
 
 	std::vector<int> imageSize = m_Tracker->getImageSize();
@@ -207,24 +221,22 @@ char* AriemediCamera::GetRightImage()
 
 mitk::DataNode::Pointer AriemediCamera::GetPointCloud()
 {
-	m_Tracker->reconstructPointCloud(1920, 1200, 0, 0, 0, 0);
-	while (m_Tracker->getReconstructionStatus()!= TransmissionStatus::ReconstructionReady)
-	{
-		std::cout << m_Tracker->getReconstructionStatus() << std::endl;
-		//QThread::msleep(10);
-	}
+	/*m_Tracker->reconstructPointCloud(1920, 1200, 0, 0, 0, 0);
+
+
+	std::cout << m_Tracker->getReconstructionStatus() << std::endl;
 	if (m_Tracker->getReconstructionStatus() == TransmissionStatus::ReconstructionReady)
 	{
 		ReconstructPointCloud Reconstructor = ReconstructPointCloud(m_Tracker->getReconstructParameters());
 		Reconstructor.setReconstructData(m_Tracker->getReconstructionData());
 		std::vector<std::vector<float>> pc = Reconstructor.getPointCloud();
 		return GetCameraPointCloudDataNode(pc);
-	}
-	else
-	{
-		std::cout << "m_Tracker->getReconstructionStatus() != TransmissionStatus::ReconstructionReady" << std::endl;
+	}*/
+	m_Tracker->reconstructPointCloud(1920, 1200, 0, 0, 0, 0);
+	if (m_PointCloud.size() == 0)
 		return nullptr;
-	}
+	return GetCameraPointCloudDataNode(m_PointCloud);
+	//return nullptr;
 }
 
 bool AriemediCamera::UpdateCameraToToolMatrix(ToolTrackingData aToolTrackingData)
@@ -266,8 +278,8 @@ mitk::DataNode::Pointer AriemediCamera::GetCameraPointCloudDataNode(std::vector<
 	pointSetNode->SetData(pointSet);
 	pointSetNode->SetName("PointCloud");
 	pointSetNode->SetFloatProperty("pointsize", 1);
-	pointSetNode->SetColor(1,1,0); //yellow
-	
+	pointSetNode->SetColor(1, 1, 0); //yellow
+
 	return pointSetNode;
 }
 
@@ -285,12 +297,12 @@ void AriemediCamera::UpdateData()
 {
 	//show system alert information
 	if (DeviceAlert::Normal != m_Tracker->getSystemAlert())
-		cout << DeviceAlert::toString(m_Tracker->getSystemAlert()) << endl;
+		std::cout << DeviceAlert::toString(m_Tracker->getSystemAlert()) << endl;
 
 	//interuption check
 	if (ConnectionStatus::Interruption == m_Tracker->getConnectionStatus())
 	{
-		cout << ConnectionStatus::toString(m_Tracker->getConnectionStatus()) << endl;
+		std::cout << ConnectionStatus::toString(m_Tracker->getConnectionStatus()) << endl;
 		return;
 	}
 	m_Tracker->trackingUpdate();

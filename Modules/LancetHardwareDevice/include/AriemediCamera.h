@@ -71,5 +71,9 @@ private:
 	QTimer* m_ImageUpdateTimer;
 	ARMDCombinedAPI* m_Tracker;
 	bool m_IsStart = false;
+
+	bool m_IsGeneratePointCloud = false;
+
+	std::vector<std::vector<float>> m_PointCloud;
 };
 
